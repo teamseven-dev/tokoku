@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 	"tokoku/config"
 	"tokoku/customer"
+	"tokoku/product"
 	"tokoku/staff"
 )
 
@@ -12,55 +16,129 @@ func main() {
 	var conn = config.ConnectSQL(*cfg)
 	var staffMenu = staff.StaffMenu{DB: conn}
 	var custmenu = customer.CustMenu{DB: conn}
+	var productMenu = product.ProductMenu{DB: conn}
 
 	var inputMenu = 1
 	for inputMenu != 0 {
 		fmt.Println("Welcome To Tokoku")
-		fmt.Print("1. Login\n0. Exit\nInsert Your Menu :")
+		fmt.Print("1. Login\n0. Exit\nInsert Your Menu : ")
 		fmt.Scanln(&inputMenu)
 		if inputMenu == 1 {
 			var inputName, inputPassword string
-			fmt.Print("Username :")
+			fmt.Print("Username : ")
 			fmt.Scanln(&inputName)
-			fmt.Print("Password :")
+			fmt.Print("Password : ")
 			fmt.Scanln(&inputPassword)
 			res, err := staffMenu.Login(inputName, inputPassword)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 			if res > 0 {
-				fmt.Println("Success Login ")
+				fmt.Println("------------------")
+				fmt.Println("Logged in succesfully!")
+				fmt.Println("=======================")
 				if res > 1 {
 					islogin := true
 					for islogin {
-						fmt.Println("Staff Menu")
+						fmt.Printf("Welcome staff, %s!\n", inputName)
+						fmt.Println("------------------")
 						fmt.Println("1. Transaction")
-						fmt.Println("2. Add a new product")
-						fmt.Println("3. Update product stock")
-						fmt.Println("4. Update product information")
-						fmt.Println("5. Add a new customer")
+						fmt.Println("2. Insert a new product")
+						fmt.Println("3. Show products")
+						fmt.Println("4. Update a product stock")
+						fmt.Println("5. Edit a product")
+						fmt.Println("6. Add a new customer")
 						fmt.Println("9. Logout")
-						fmt.Print("Please Insert Menu :")
+						fmt.Print("Please choose a menu [1,2,3,4,5,6,9] : ")
+
 						var choice int
 						fmt.Scanln(&choice)
+						fmt.Println("=======================")
+						
 						switch choice {
 						case 1:
-							{
-								fmt.Println("ini transaction")
+							
+							// TRANSACTION
 
-							}
 						case 2:
-							{
-								fmt.Println("add new product")
+
+							// INSERT A NEW PRODUCT
+							inputProduct := product.Product{}
+							inputProduct.IDStaff = res
+							fmt.Println("INSERT A NEW PRODUCT")
+							fmt.Println("------------------")
+							fmt.Print("Insert product name : ")
+							consoleReader := bufio.NewReader(os.Stdin)
+							newProd, _ := consoleReader.ReadString('\n')
+							newProd = strings.TrimSuffix(newProd, "\n")
+							inputProduct.Name = newProd
+							fmt.Print("Insert product quantity : ")
+							fmt.Scanln(&inputProduct.Qty)
+
+							prodRes, err := productMenu.Insert(inputProduct)
+							if err != nil {
+								fmt.Println("------------------")
+								fmt.Println(err.Error())
+							} else {
+								fmt.Println("------------------")
+								fmt.Println("Inserted a new product successfully!")
+								fmt.Println("=======================")
 							}
+							inputProduct.ID = prodRes
+
 						case 3:
-							{
-								fmt.Println("update product stock")
+							
+							// SHOW PRODUCTS
+							prodMenu := 1
+
+							for prodMenu != 9 {
+								products, _ := productMenu.Show()
+								for i := 0; i < len(products); i++ {
+								fmt.Println("Product Name", i+1, "  : ", products[i].Name)
+								fmt.Println("QTY              : ", products[i].Qty)
+								fmt.Println("Staff Name        : ", products[i].StaffName)
+								fmt.Println("------------------")
+								}
+
+								fmt.Println("1. Delete a product")
+								fmt.Println("9. Back to main menu")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&prodMenu)
+								
+
+								if prodMenu == 1 {
+									var productName string
+									fmt.Println("=======================")
+									fmt.Println("DELETE A PRODUCT")
+									fmt.Println("------------------")
+									fmt.Print("Please insert a product name : ")
+									consoleReader := bufio.NewReader(os.Stdin)
+									productName, _ = consoleReader.ReadString('\n')
+									productName = strings.TrimSuffix(productName, "\n")
+
+									res, err := productMenu.Delete(productName)
+
+									if err != nil {
+										fmt.Println("------------------")
+										fmt.Println(err.Error())
+										fmt.Println("=======================")
+									}
+
+									if res {
+										fmt.Println("------------------")
+										fmt.Printf("Product `%s` has been deleted successfully.\n", productName)
+										fmt.Println("=======================")
+									}
+
+								} else {
+									fmt.Println("=======================")
+								}
 							}
+							
 						case 4:
-							{
-								fmt.Println("updated product information")
-							}
+							
+							// EDIT A PRODUCT STOCK
+
 						case 5:
 							{
 								fmt.Println("add new customer")
@@ -78,11 +156,20 @@ func main() {
 									fmt.Println(err.Error())
 								}
 							}
+							
+							// EDIT A PRODUCT INFORMATION
+
+						case 6:
+
+							// INSERT A NEW CUSTOMER
+
 						case 9:
-							{
-								fmt.Println("bye")
-								islogin = false
-							}
+
+							// LOGOUT
+							fmt.Println("Logged out succesfully!")
+							fmt.Println("=======================")
+							islogin = false
+
 						}
 					}
 				} else if res == 1 {
