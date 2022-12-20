@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"tokoku/config"
+	"tokoku/customer"
 	"tokoku/staff"
 )
 
@@ -10,8 +11,8 @@ func main() {
 	var cfg = config.ReadConfig()
 	var conn = config.ConnectSQL(*cfg)
 	var staffMenu = staff.StaffMenu{DB: conn}
+	var custmenu = customer.CustMenu{DB: conn}
 
-	fmt.Println(conn)
 	var inputMenu = 1
 	for inputMenu != 0 {
 		fmt.Println("Welcome To Tokoku")
@@ -63,6 +64,19 @@ func main() {
 						case 5:
 							{
 								fmt.Println("add new customer")
+								var CusName string
+								fmt.Println("Please Insert Data Customer")
+								fmt.Print("New Customer Name :")
+								fmt.Scanln(&CusName)
+								ifada, err := custmenu.AddCustomer(CusName, res)
+								if ifada == true {
+									fmt.Println("Success Add Customer")
+								} else {
+									fmt.Println("Sorry Can't Add Customer")
+								}
+								if err != nil {
+									fmt.Println(err.Error())
+								}
 							}
 						case 9:
 							{
@@ -104,7 +118,19 @@ func main() {
 							}
 						case 5:
 							{
-								fmt.Println("remove customer")
+								var namacus string
+								fmt.Println("Delete Customer Menu")
+								fmt.Print("Insert Customer Name :")
+								fmt.Scanln(&namacus)
+								ifberhasil, err := custmenu.RemoveCustomer(namacus)
+								if err != nil {
+									fmt.Println(err.Error())
+								}
+								if ifberhasil {
+									fmt.Println("Data Customer ", namacus, " Success To Delete")
+								} else {
+									fmt.Println("Sorry Can't Delete Customer")
+								}
 							}
 						case 9:
 							{
