@@ -1,1 +1,128 @@
 package product
+
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+	"log"
+)
+
+type Product struct {
+	ID int
+	Name string
+	Qty int
+	IDStaff int
+	StaffName string
+	CreatedDate string
+	UpdatedDate string
+}
+
+type ProductMenu struct {
+	DB *sql.DB
+}
+
+func (pm *ProductMenu) Duplicate(productName string) bool {
+	res := pm.DB.QueryRow("SELECT id_product FROM products where product_name = ?", productName)
+	var idExist int
+	err := res.Scan(&idExist)
+	if err != nil {
+		log.Println("Result scan error", err.Error())
+		return false
+	}
+	return true
+}
+
+func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
+	insertQry, err := pm.DB.Prepare("INSERT INTO products (product_name, qty, id_staff, created_date, updated_date) VALUES (?,?,?,now(),now())")
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Prepare insert newProduct : ", err.Error())
+		return 0, errors.New("Prepare statement insert new product error.")
+	}
+
+	if pm.Duplicate(newProduct.Name) {
+		fmt.Println("------------------")
+		log.Println("duplicated information")
+		return 0, errors.New("product name already exist")
+	}
+
+	res, err := insertQry.Exec(newProduct.Name, newProduct.Qty, newProduct.IDStaff)
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Insert new product : ", err.Error())
+		return 0, errors.New("Insert new product error.")
+	}
+
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Afer inser new product : ", err.Error())
+		return 0, errors.New("Error after insert new product.")
+	}
+
+	if affRows <= 0 {
+		fmt.Println("------------------")
+		log.Println("No rows affected.")
+		return 0, errors.New("No record affected.")
+	}
+
+	id, _ := res.LastInsertId()
+
+	return int(id), nil
+}
+
+func (pm *ProductMenu) Delete(productName string) (bool, error) {
+	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE product_name = ?;")
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Prepare delete product : ", err.Error())
+		return false, errors.New("Prepare statement delete product error.")
+	}
+
+	res, err := deleteQry.Exec(productName)
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Delete product : ", err.Error())
+		return false, errors.New("Delete product error.")
+	}
+
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Afer delete product : ", err.Error())
+		return false, errors.New("Error after delete product.")
+	}
+
+	if affRows <= 0 {
+		fmt.Println("------------------")
+		log.Println("No rows affected.")
+		return false, errors.New("No record affected.")
+	}
+
+	return true, nil
+}
+
+func (pm *ProductMenu) Show() ([]Product, error) {
+	rows, err := pm.DB.Query("SELECT p.product_name, p.qty, s.name FROM staffs s, products p WHERE s.id_staff = p.id_staff")
+	if err != nil {
+		log.Println("------------------")
+    	log.Println(err)
+	}
+
+	res := []Product{} // creating empty slice
+	defer rows.Close()
+
+	for rows.Next() {
+		product := Product{} // creating new struct for every row
+		err = rows.Scan(&product.Name, &product.Qty, &product.StaffName)
+		if err != nil {
+			log.Println("------------------")
+			log.Println(err)
+		}
+		res = append(res, product)
+	}
+
+	return res, nil
+}
