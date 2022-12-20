@@ -105,7 +105,7 @@ func (pm *ProductMenu) Delete(productName string) (bool, error) {
 }
 
 func (pm *ProductMenu) Show() ([]Product, error) {
-	rows, err := pm.DB.Query("SELECT p.product_name, p.qty, s.name FROM staffs s, products p WHERE s.id_staff = p.id_staff")
+	rows, err := pm.DB.Query("SELECT p.id_product, p.product_name, p.qty, s.name FROM staffs s, products p WHERE s.id_staff = p.id_staff")
 	if err != nil {
 		log.Println("------------------")
     	log.Println(err)
@@ -116,7 +116,7 @@ func (pm *ProductMenu) Show() ([]Product, error) {
 
 	for rows.Next() {
 		product := Product{} // creating new struct for every row
-		err = rows.Scan(&product.Name, &product.Qty, &product.StaffName)
+		err = rows.Scan(&product.ID, &product.Name, &product.Qty, &product.StaffName)
 		if err != nil {
 			log.Println("------------------")
 			log.Println(err)
@@ -125,4 +125,58 @@ func (pm *ProductMenu) Show() ([]Product, error) {
 	}
 
 	return res, nil
+}
+
+func (pm *ProductMenu) UpdateName(newName string, id int) (bool, error) {
+	updateNameQry, err := pm.DB.Prepare("UPDATE products SET product_name = ? WHERE id_product = ?")
+	if err != nil {
+		log.Println("Prepare update product name : ", err.Error())
+		return false, errors.New("Prepare statement update product name error.")
+	}
+
+	res, err := updateNameQry.Exec(newName, id)
+	if err != nil {
+		log.Println("Update product name : ", err.Error())
+		return false, errors.New("Update product name error.")
+	}
+
+	affRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("After update product name : ", err.Error())
+		return false, errors.New("After update product name error.")
+	}
+
+	if affRows <= 0 {
+		log.Println("No rows affected.")
+		return false, errors.New("No record affected.")
+	}
+
+	return true, nil
+}
+
+func (pm *ProductMenu) UpdateStock(addQty, id int) (bool, error) {
+	updateStockQry, err := pm.DB.Prepare("UPDATE products SET qty = qty + ? WHERE id_product = ?")
+	if err != nil {
+		log.Println("Prepare update product stock : ", err.Error())
+		return false, errors.New("Prepare statement update product stock error.")
+	}
+
+	res, err := updateStockQry.Exec(addQty, id)
+	if err != nil {
+		log.Println("Update product stock : ", err.Error())
+		return false, errors.New("Update product stock error.")
+	}
+
+	affRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("After update product stock : ", err.Error())
+		return false, errors.New("After update product stock error.")
+	}
+
+	if affRows <= 0 {
+		log.Println("No rows affected.")
+		return false, errors.New("No record affected.")
+	}
+
+	return true, nil
 }
