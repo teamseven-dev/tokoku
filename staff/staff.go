@@ -111,12 +111,12 @@ func (sm *StaffMenu) Show() ([]Staff, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		staff := Staff{} // creating new struct for every row
-		err = rows.Scan(&staff.ID, &staff.Name)
+		staffs := Staff{} // creating new struct for every row
+		err = rows.Scan(&staffs.ID, &staffs.Name)
 		if err != nil {
 			log.Println(err)
 		}
-		res = append(res, staff)
+		res = append(res, staffs)
 	}
 
 	return res, nil
@@ -165,5 +165,33 @@ func (sm *StaffMenu) Remove(name string) (bool, error) {
 		return false, errors.New("no record")
 	}
 	
+	return true, nil
+}
+
+func (sm *StaffMenu) UpdateStaff(updateName string, updatePassword string, id int) (bool, error) {
+	updateStaffQry, err := sm.DB.Prepare("UPDATE staffs SET name = ? AND password = ? WHERE id_staff = ?")
+	if err != nil {
+		log.Println("prepare update name and password ", err.Error())
+		return false, errors.New("prepare statement update name and password error")
+	}
+
+	res, err := updateStaffQry.Exec(updateName, updatePassword)
+	if err != nil {
+		log.Println("update name and password ", err.Error())
+		return false, errors.New("update name and password error")
+	}
+	// Cek berapa baris yang terpengaruh query diatas
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		log.Println("after update name and password ", err.Error())
+		return false, errors.New("error setelah update name and password")
+	}
+
+	if affRows <= 0 {
+		log.Println("no record affected")
+		return false, errors.New("no record")
+	}
+
 	return true, nil
 }
