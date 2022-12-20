@@ -46,9 +46,9 @@ func main() {
 						fmt.Println("1. Transaction")
 						fmt.Println("2. Insert a new product")
 						fmt.Println("3. Show products")
-						fmt.Println("4. Update a product stock")
-						fmt.Println("5. Edit a product")
-						fmt.Println("6. Add a new customer")
+						fmt.Println("4. Add a product stock")
+						fmt.Println("5. Update a product name")
+						fmt.Println("6. Insert a new customer")
 						fmt.Println("9. Logout")
 						fmt.Print("Please choose a menu [1,2,3,4,5,6,9] : ")
 
@@ -93,11 +93,14 @@ func main() {
 							prodMenu := 1
 
 							for prodMenu != 9 {
+								fmt.Println("LIST OF PRODUCTS")
+								fmt.Println("------------------")
 								products, _ := productMenu.Show()
 								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Name", i+1, "  : ", products[i].Name)
-								fmt.Println("QTY              : ", products[i].Qty)
-								fmt.Println("Staff Name        : ", products[i].StaffName)
+								fmt.Println("Product Code   : ", products[i].ID)
+								fmt.Println("Product Name   : ", products[i].Name)
+								fmt.Println("QTY            : ", products[i].Qty)
+								fmt.Println("Staff Name     : ", products[i].StaffName)
 								fmt.Println("------------------")
 								}
 
@@ -106,7 +109,6 @@ func main() {
 								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&prodMenu)
 								
-
 								if prodMenu == 1 {
 									var productName string
 									fmt.Println("=======================")
@@ -138,31 +140,124 @@ func main() {
 							
 						case 4:
 							
-							// EDIT A PRODUCT STOCK
+							// UPDATE A PRODUCT STOCK
+							prodMenu := 1
 
-						case 5:
-							{
-								fmt.Println("add new customer")
-								var CusName string
-								fmt.Println("Please Insert Data Customer")
-								fmt.Print("New Customer Name :")
-								fmt.Scanln(&CusName)
-								ifada, err := custmenu.AddCustomer(CusName, res.ID)
-								if ifada == true {
-									fmt.Println("Success Add Customer")
-								} else {
-									fmt.Println("Sorry Can't Add Customer")
+							for prodMenu != 9 {
+								fmt.Println("LIST OF PRODUCTS")
+								fmt.Println("------------------")
+								products, _ := productMenu.Show()
+								for i := 0; i < len(products); i++ {
+								fmt.Println("Product Code   : ", products[i].ID)
+								fmt.Println("Product Name   : ", products[i].Name)
+								fmt.Println("QTY            : ", products[i].Qty)
+								fmt.Println("Staff Name     : ", products[i].StaffName)
+								fmt.Println("------------------")
 								}
-								if err != nil {
-									fmt.Println(err.Error())
+
+								fmt.Println("1. add stock")
+								fmt.Println("9. Back to main menu")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&prodMenu)
+								
+								if prodMenu == 1 {
+									var prodID, addQty int
+									fmt.Println("=======================")
+									fmt.Println("ADD A PRODUCT STOCK")
+									fmt.Println("------------------")
+									fmt.Print("Please insert product id : ")
+									fmt.Scanln(&prodID)
+									fmt.Print("Please insert additional Qty : ")
+									fmt.Scanln(&addQty)
+
+									res, err := productMenu.UpdateStock(addQty, prodID)
+
+									if err != nil {
+										fmt.Println("------------------")
+										fmt.Println(err.Error())
+										fmt.Println("=======================")
+									}
+
+									if res {
+										fmt.Println("------------------")
+										fmt.Println("Added a product stock succesfully!")
+										fmt.Println("=======================")
+									}
+
+								} else {
+									fmt.Println("=======================")
 								}
 							}
+
+						case 5:
 							
-							// EDIT A PRODUCT INFORMATION
+							// UPDATE A PRODUCT NAME
+							prodMenu := 1
+
+							for prodMenu != 9 {
+								fmt.Println("LIST OF PRODUCTS")
+								fmt.Println("------------------")
+								products, _ := productMenu.Show()
+								for i := 0; i < len(products); i++ {
+								fmt.Println("Product Code   : ", products[i].ID)
+								fmt.Println("Product Name   : ", products[i].Name)
+								fmt.Println("QTY            : ", products[i].Qty)
+								fmt.Println("Staff Name     : ", products[i].StaffName)
+								fmt.Println("------------------")
+								}
+
+								fmt.Println("1. update a product name")
+								fmt.Println("9. Back to main menu")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&prodMenu)
+								
+								if prodMenu == 1 {
+									var prodID int 
+									var newName string
+									fmt.Println("=======================")
+									fmt.Println("UPDATE A PRODUCT NAME")
+									fmt.Println("------------------")
+									fmt.Print("Please insert product id : ")
+									fmt.Scanln(&prodID)
+									fmt.Print("Please insert new name : ")
+									fmt.Scanln(&newName)
+
+									res, err := productMenu.UpdateName(newName, prodID)
+
+									if err != nil {
+										fmt.Println("------------------")
+										fmt.Println(err.Error())
+										fmt.Println("=======================")
+									}
+
+									if res {
+										fmt.Println("------------------")
+										fmt.Println("Updated a product name succesfully!")
+										fmt.Println("=======================")
+									}
+
+								} else {
+									fmt.Println("=======================")
+								}
+							}
 
 						case 6:
 
 							// INSERT A NEW CUSTOMER
+							fmt.Println("INSERT A NEW CUSTOMER")
+							var CusName string
+							fmt.Println("Please Insert Data Customer")
+							fmt.Print("New Customer Name :")
+							fmt.Scanln(&CusName)
+							ifada, err := custmenu.AddCustomer(CusName, res.ID)
+							if ifada == true {
+								fmt.Println("Success Add Customer")
+							} else {
+								fmt.Println("Sorry Can't Add Customer")
+							}
+							if err != nil {
+								fmt.Println(err.Error())
+							}
 
 						case 9:
 
