@@ -34,11 +34,11 @@ func main() {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			if res > 0 {
+			if res.ID > 0 {
 				fmt.Println("------------------")
 				fmt.Println("Logged in succesfully!")
 				fmt.Println("=======================")
-				if res > 1 {
+				if res.ID > 1 {
 					islogin := true
 					for islogin {
 						fmt.Printf("Welcome staff, %s!\n", inputName)
@@ -65,7 +65,7 @@ func main() {
 
 							// INSERT A NEW PRODUCT
 							inputProduct := product.Product{}
-							inputProduct.IDStaff = res
+							inputProduct.IDStaff = res.ID
 							fmt.Println("INSERT A NEW PRODUCT")
 							fmt.Println("------------------")
 							fmt.Print("Insert product name : ")
@@ -147,7 +147,7 @@ func main() {
 								fmt.Println("Please Insert Data Customer")
 								fmt.Print("New Customer Name :")
 								fmt.Scanln(&CusName)
-								ifada, err := custmenu.AddCustomer(CusName, res)
+								ifada, err := custmenu.AddCustomer(CusName, res.ID)
 								if ifada == true {
 									fmt.Println("Success Add Customer")
 								} else {
@@ -173,8 +173,7 @@ func main() {
 
 						}
 					}
-				}
-			} else if res.ID == 1 {
+				} else if res.ID == 1 {
 					islogin := true
 					for islogin {
 						fmt.Println("Admin Menu")
@@ -242,9 +241,10 @@ func main() {
 						case 9:
 							fmt.Println("bye")
 							islogin = false
+						}
 					}
 				}
-			}
+			} 
 		}
 	}
 }
