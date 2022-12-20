@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"tokoku/config"
+)
 
 func main() {
-	fmt.Println("hello world")
+	var cfg = config.ReadConfig()
+	var conn = config.ConnectSQL(*cfg)
+
+	fmt.Println(conn)
 }
