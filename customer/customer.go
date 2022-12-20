@@ -63,13 +63,13 @@ func (cm *CustMenu) RemoveCustomer(nama string) (bool, error) {
 	return true, nil
 }
 
-func (cm *CustMenu) ShowCustomer() Customer {
+func (cm *CustMenu) ShowCustomer() (Customer, error) {
 	res, err := cm.DB.Query("SELECT FROM customers")
 	if err != nil {
 		log.Println("error query", err.Error())
-		errors.New("error select database")
+		return Customer{}, errors.New("error select database")
 	}
 	cus := Customer{}
 	res.Scan(&cus.ID, &cus.Name, cus.IDStaff)
-	return cus
+	return cus, nil
 }
