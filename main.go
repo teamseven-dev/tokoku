@@ -19,6 +19,7 @@ func main() {
 	var productMenu = product.ProductMenu{DB: conn}
 
 	var inputMenu = 1
+
 	for inputMenu != 0 {
 		fmt.Println("Welcome To Tokoku")
 		fmt.Print("1. Login\n0. Exit\nInsert Your Menu : ")
@@ -172,7 +173,8 @@ func main() {
 
 						}
 					}
-				} else if res == 1 {
+				}
+			} else if res.ID == 1 {
 					islogin := true
 					for islogin {
 						fmt.Println("Admin Menu")
@@ -187,22 +189,39 @@ func main() {
 						fmt.Scanln(&choice)
 						switch choice {
 						case 1:
-							{
-								fmt.Println("add a new staff")
-
+							var newStaff staff.Staff
+							fmt.Println("\n", "== Insert New Staff ==")
+							fmt.Print("Masukkan nama: ")
+							fmt.Scanln(&newStaff.Name)
+							fmt.Print("Masukkan password: ")
+							fmt.Scanln(&newStaff.Password)
+							res, err := staffMenu.Register(newStaff)
+							if err != nil {
+								fmt.Println(err.Error())
+							}
+							if res {
+								fmt.Println("Sukses mendaftarkan data")
+							} else {
+								fmt.Println("Gagal mendaftarn data")
 							}
 						case 2:
-							{
-								fmt.Println("remove a staff")
+							var removeStaff staff.Staff
+							fmt.Println("\n", "== Remove Staff ==")
+							fmt.Print("Staff name: ")
+							fmt.Scanln(&removeStaff.Name)
+							res, err := staffMenu.Remove(removeStaff.Name)
+							if err != nil {
+								fmt.Println(err.Error())
+							}
+							if res {
+								fmt.Println("Berhasil menghapus data")
+							} else {
+								fmt.Println("Gagal menghapus data")
 							}
 						case 3:
-							{
-								fmt.Println("remove product")
-							}
+							fmt.Println("remove product")
 						case 4:
-							{
-								fmt.Println("remove transaction")
-							}
+							fmt.Println("remove transaction")
 						case 5:
 							{
 								var namacus string
@@ -219,15 +238,11 @@ func main() {
 									fmt.Println("Sorry Can't Delete Customer")
 								}
 							}
+							fmt.Println("remove customer")
 						case 9:
-							{
-								fmt.Println("bye")
-								islogin = false
-							}
-						}
-
+							fmt.Println("bye")
+							islogin = false
 					}
-
 				}
 			}
 		}
