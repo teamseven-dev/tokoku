@@ -63,13 +63,23 @@ func (cm *CustMenu) RemoveCustomer(nama string) (bool, error) {
 	return true, nil
 }
 
-func (cm *CustMenu) ShowCustomer() (Customer, error) {
+func (cm *CustMenu) ShowCustomer() ([]Customer, error) {
 	res, err := cm.DB.Query("SELECT FROM customers")
 	if err != nil {
 		log.Println("error query", err.Error())
-		return Customer{}, errors.New("error select database")
+		return []Customer{}, errors.New("error select database")
 	}
-	cus := Customer{}
-	res.Scan(&cus.ID, &cus.Name, cus.IDStaff)
+	cus := []Customer{}
+	defer res.Close()
+
+	for res.Next() {
+		customer := Customer{} // creating new struct for every row
+		err = res.Scan(&customer.ID, &customer.Name, &customer.IDStaff)
+		if err != nil {
+			log.Println("------------------")
+			log.Println(err)
+		}
+		cus = append(cus, customer)
+	}
 	return cus, nil
 }
