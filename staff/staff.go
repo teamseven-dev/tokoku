@@ -122,19 +122,6 @@ func (sm *StaffMenu) Show() ([]Staff, error) {
 	return res, nil
 }
 
-// func (sm *StaffMenu) Check(name string) bool {
-// 	res := sm.DB.QueryRow("SELECT name FROM staffs where name = ?", name)
-// 	var admin string = "admin"
-// 	err := res.Scan(&admin)
-// 	if err != nil {
-// 		if err.Error() != "sql: no rows in result set" {
-// 			log.Println("Result scan error", err.Error())
-//         }
-//         return false
-//     }
-// 	return true
-// }
-
 func (sm *StaffMenu) Remove(name string) (bool, error) {
 	removeQry, err := sm.DB.Prepare("DELETE FROM staffs WHERE name = ?")
 	if err != nil {
@@ -142,10 +129,10 @@ func (sm *StaffMenu) Remove(name string) (bool, error) {
 		return false, errors.New("prepare statement remove staff error")
 	}
 
-	// if sm.Check(name) {
-	// 	log.Println("admin information")
-	// 	return false, errors.New("admin tidak dapat dihapus")
-	// }
+	if name == "admin" {
+		log.Println("admin information")
+		return false, errors.New("admin tidak dapat dihapus")
+	}
 
 	res, err := removeQry.Exec(name)
 	if err != nil {
