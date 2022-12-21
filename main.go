@@ -129,16 +129,23 @@ func main() {
 								fmt.Println("LIST OF PRODUCTS")
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
-								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Code   : ", products[i].ID)
-								fmt.Println("Product Name   : ", products[i].Name)
-								fmt.Println("QTY            : ", products[i].Qty)
-								fmt.Println("Staff Name     : ", products[i].StaffName)
-								fmt.Println("------------------")
+
+								if len(products) > 0 {
+									for i := 0; i < len(products); i++ {
+										fmt.Println("Product Code   : ", products[i].ID)
+										fmt.Println("Product Name   : ", products[i].Name)
+										fmt.Println("QTY            : ", products[i].Qty)
+										fmt.Println("Staff Name     : ", products[i].StaffName)
+										fmt.Println("------------------")
+									}
+								} else {
+									fmt.Println("No product available.")
+									fmt.Println("------------------")
 								}
 
 								fmt.Println("1. add stock")
 								fmt.Println("9. Back to main menu")
+								fmt.Println("------------------")
 								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&prodMenu)
 								
@@ -180,12 +187,17 @@ func main() {
 								fmt.Println("LIST OF PRODUCTS")
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
-								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Code   : ", products[i].ID)
-								fmt.Println("Product Name   : ", products[i].Name)
-								fmt.Println("QTY            : ", products[i].Qty)
-								fmt.Println("Staff Name     : ", products[i].StaffName)
-								fmt.Println("------------------")
+								if len(products) > 0 {
+									for i := 0; i < len(products); i++ {
+										fmt.Println("Product Code   : ", products[i].ID)
+										fmt.Println("Product Name   : ", products[i].Name)
+										fmt.Println("QTY            : ", products[i].Qty)
+										fmt.Println("Staff Name     : ", products[i].StaffName)
+										fmt.Println("------------------")
+									}
+								} else {
+									fmt.Println("No product available.")
+									fmt.Println("------------------")
 								}
 
 								fmt.Println("1. update a product name")

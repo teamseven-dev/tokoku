@@ -39,8 +39,8 @@ func (cm *CustMenu) AddCustomer(nama string, StaffID int) (bool, error) {
 	return true, nil
 }
 
-func (cm *CustMenu) RemoveCustomer(nama string) (bool, error) {
-	delcust, err := cm.DB.Prepare("DELETE FROM customers WHERE name = ?")
+func (CM *CustMenu) RemoveCustomer(nama string) (bool, error) {
+	delcust, err := CM.DB.Prepare("DELETE FROM customers WHERE name = ?")
 	if err != nil {
 		log.Println("error di query delete")
 		return false, errors.New("error query delete")
