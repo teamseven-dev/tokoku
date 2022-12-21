@@ -391,19 +391,20 @@ func main() {
 							
 							// INSERT A NEW STAFF
 							var newStaff staff.Staff
-							fmt.Println("\n", "== Insert New Staff ==")
-							fmt.Print("Masukkan nama: ")
+							fmt.Println("INSERT A NEW STAFF")
+							fmt.Println("------------------")
+							fmt.Print("Insert new username : ")
 							fmt.Scanln(&newStaff.Name)
-							fmt.Print("Masukkan password: ")
+							fmt.Print("Insert new password : ")
 							fmt.Scanln(&newStaff.Password)
 							res, err := staffMenu.Register(newStaff)
 							if err != nil {
 								fmt.Println(err.Error())
 							}	
 							if res {
-								fmt.Println("Sukses mendaftarkan data")
+								fmt.Println("New Staff :", newStaff.Name, "Has Been Inserted Succesfully!")
 							} else {
-								fmt.Println("Gagal mendaftarn data")
+								fmt.Println("Sorry. Unable to Insert New Staff")
 							}	
 
 						case 5:
