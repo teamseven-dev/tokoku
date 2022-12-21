@@ -72,15 +72,15 @@ func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
 	return int(id), nil
 }
 
-func (pm *ProductMenu) Delete(productName string) (bool, error) {
-	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE product_name = ?;")
+func (pm *ProductMenu) Delete(id int) (bool, error) {
+	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE id_product = ?;")
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Prepare delete product : ", err.Error())
 		return false, errors.New("Prepare statement delete product error.")
 	}
 
-	res, err := deleteQry.Exec(productName)
+	res, err := deleteQry.Exec(id)
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Delete product : ", err.Error())

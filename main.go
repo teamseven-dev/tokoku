@@ -54,7 +54,9 @@ func main() {
 						fmt.Println("5. Add a product stock")
 						fmt.Println("6. Update a product name")
 						fmt.Println("7. Insert a new customer")
+						fmt.Println("-")
 						fmt.Println("9. Logout")
+						fmt.Println("------------------")
 						fmt.Print("Please choose a menu [1, 2, 3, 4, 5, 6, 9] : ")
 
 						var choice int
@@ -99,12 +101,12 @@ func main() {
 						case 4:
 							
 							// SHOW PRODUCTS
-							prodMenu := 1
+							fmt.Println("LIST OF PRODUCTS")
+							fmt.Println("------------------")
 
-							for prodMenu != 9 {
-								fmt.Println("LIST OF PRODUCTS")
-								fmt.Println("------------------")
-								products, _ := productMenu.Show()
+							products, _ := productMenu.Show()
+
+							if len(products) > 0 {
 								for i := 0; i < len(products); i++ {
 								fmt.Println("Product Code   : ", products[i].ID)
 								fmt.Println("Product Name   : ", products[i].Name)
@@ -112,12 +114,10 @@ func main() {
 								fmt.Println("Staff Name     : ", products[i].StaffName)
 								fmt.Println("------------------")
 								}
-
-								fmt.Println("1. Delete a product")
-								fmt.Println("9. Back to main menu")
-								fmt.Print("Please choose a menu [1, 9] : ")
-								fmt.Scanln(&prodMenu)
+							} else {
+								fmt.Println("No product available.")
 							}
+							
 							fmt.Println("=======================")
 
 						case 5:
@@ -310,16 +310,13 @@ func main() {
 								if prodMenu == 1 {
 
 									// DELETE A PRODUCT
-									var productName string
+									var productID int
 									fmt.Println("=======================")
 									fmt.Println("DELETE A PRODUCT")
 									fmt.Println("------------------")
-									fmt.Print("Please insert a product name : ")
-									consoleReader := bufio.NewReader(os.Stdin)
-									productName, _ = consoleReader.ReadString('\n')
-									productName = strings.TrimSuffix(productName, "\n")
+									fmt.Print("Please insert a product code : ")
 
-									res, err := productMenu.Delete(productName)
+									res, err := productMenu.Delete(productID)
 									
 									if err != nil {
 										fmt.Println("------------------")
@@ -329,7 +326,7 @@ func main() {
 
 									if res {
 										fmt.Println("------------------")
-										fmt.Printf("Product `%s` has been deleted successfully.\n", productName)
+										fmt.Printf("Product `%s` has been deleted successfully.\n", products[productID].Name)
 										fmt.Println("=======================")
 									}
 
