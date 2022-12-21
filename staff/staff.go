@@ -68,10 +68,10 @@ func (sm *StaffMenu) Remove(name string) (bool, error) {
 		return false, errors.New("prepare statement remove staff error")
 	}
 
-	// if sm.Check(name) {
-	// 	log.Println("admin information")
-	// 	return false, errors.New("admin tidak dapat dihapus")
-	// }
+	if name == "admin" {
+		log.Println("admin information")
+		return false, errors.New("admin can't be deleted")
+	}
 
 	res, err := removeQry.Exec(name)
 	if err != nil {
@@ -94,14 +94,46 @@ func (sm *StaffMenu) Remove(name string) (bool, error) {
 	return true, nil
 }
 
-func (sm *StaffMenu) UpdateStaff(updateName string, updatePassword string, id int) (bool, error) {
+func (sm *StaffMenu) DeleteAll() (bool, error) {
+	deleteAllQry, err := sm.DB.Prepare("DELETE FROM staffs WHERE id_staff != 1")
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Prepare delete staffs : ", err.Error())
+		return false, errors.New("prepare statement delete staffs error")
+	}
+
+	res, err := deleteAllQry.Exec()
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Delete staffs : ", err.Error())
+		return false, errors.New("delete product staffs")
+	}
+
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Afer delete staffs : ", err.Error())
+		return false, errors.New("error after delete staffs")
+	}
+
+	if affRows <= 0 {
+		fmt.Println("------------------")
+		log.Println("No rows affected")
+		return false, errors.New("no record affected")
+	}
+
+	return true, nil
+}
+
+func (sm *StaffMenu) UpdateStaff(newName string, newPassword string, id int) (bool, error) {
 	updateStaffQry, err := sm.DB.Prepare("UPDATE staffs SET name = ? AND password = ? WHERE id_staff = ?")
 	if err != nil {
 		log.Println("prepare update name and password ", err.Error())
 		return false, errors.New("prepare statement update name and password error")
 	}
 
-	res, err := updateStaffQry.Exec(updateName, updatePassword)
+	res, err := updateStaffQry.Exec(newName, newPassword, id)
 	if err != nil {
 		log.Println("update name and password ", err.Error())
 		return false, errors.New("update name and password error")

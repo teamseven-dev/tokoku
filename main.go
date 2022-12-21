@@ -189,17 +189,19 @@ func main() {
 						case 4:
 
 							// SHOW PRODUCTS
-							fmt.Println()
-							fmt.Println("LIST OF PRODUCTS")
-							fmt.Println("------------------")
-							products, _ := productMenu.Show()
-							for i := 0; i < len(products); i++ {
-								fmt.Println("Product ID     : ", products[i].ID)
+							prodMenu := 1
+
+							for prodMenu != 9 {
+								fmt.Println("LIST OF PRODUCTS")
+								fmt.Println("------------------")
+								products, _ := productMenu.Show()
+								for i := 0; i < len(products); i++ {
+								fmt.Println("Product Code   : ", products[i].ID)
 								fmt.Println("Product Name   : ", products[i].Name)
 								fmt.Println("QTY            : ", products[i].Qty)
 								fmt.Println("Staff Name     : ", products[i].StaffName)
 								fmt.Println("------------------")
-							}
+								}
 
 							var showPrd = true
 							for showPrd {
@@ -222,11 +224,11 @@ func main() {
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
 								for i := 0; i < len(products); i++ {
-									fmt.Println("Product ID     : ", products[i].ID)
-									fmt.Println("Product Name   : ", products[i].Name)
-									fmt.Println("QTY            : ", products[i].Qty)
-									fmt.Println("Staff Name     : ", products[i].StaffName)
-									fmt.Println("------------------")
+								fmt.Println("Product Code   : ", products[i].ID)
+								fmt.Println("Product Name   : ", products[i].Name)
+								fmt.Println("QTY            : ", products[i].Qty)
+								fmt.Println("Staff Name     : ", products[i].StaffName)
+								fmt.Println("------------------")
 								}
 
 								fmt.Println("1. add stock")
@@ -273,11 +275,11 @@ func main() {
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
 								for i := 0; i < len(products); i++ {
-									fmt.Println("Product ID     : ", products[i].ID)
-									fmt.Println("Product Name   : ", products[i].Name)
-									fmt.Println("QTY            : ", products[i].Qty)
-									fmt.Println("Staff Name     : ", products[i].StaffName)
-									fmt.Println("------------------")
+								fmt.Println("Product Code   : ", products[i].ID)
+								fmt.Println("Product Name   : ", products[i].Name)
+								fmt.Println("QTY            : ", products[i].Qty)
+								fmt.Println("Staff Name     : ", products[i].StaffName)
+								fmt.Println("------------------")
 								}
 
 								fmt.Println("1. update a product name")
@@ -412,11 +414,11 @@ func main() {
 									fmt.Println("No product available.")
 								} else {
 									for i := 0; i < len(products); i++ {
-										fmt.Println("Product ID     : ", products[i].ID)
-										fmt.Println("Product Name   : ", products[i].Name)
-										fmt.Println("QTY            : ", products[i].Qty)
-										fmt.Println("Staff Name     : ", products[i].StaffName)
-										fmt.Println("------------------")
+									fmt.Println("Product Code   : ", products[i].ID)
+									fmt.Println("Product Name   : ", products[i].Name)
+									fmt.Println("QTY            : ", products[i].Qty)
+									fmt.Println("Staff Name     : ", products[i].StaffName)
+									fmt.Println("------------------")
 									}
 								}
 
@@ -438,8 +440,8 @@ func main() {
 									fmt.Print("Please insert a product code : ")
 									fmt.Scanln(&productID)
 
-									res, err := productMenu.Delete(productID)
-
+									res, err := productMenu.Delete(productName)
+									
 									if err != nil {
 										fmt.Println("------------------")
 										fmt.Println(err.Error())
@@ -529,21 +531,113 @@ func main() {
 							fmt.Scanln(&newStaff.Password)
 							res, err := staffMenu.Register(newStaff)
 							if err != nil {
+								fmt.Println("------------------")
 								fmt.Println(err.Error())
-							}	
+							}
 							if res {
-								fmt.Println("New Staff :", newStaff.Name, "Has Been Inserted Succesfully!")
+								fmt.Println("------------------")
+								fmt.Println("New Staff :", newStaff.Name, "has been inserted succesfully!")
+								fmt.Println("=======================")
 							} else {
-								fmt.Println("Sorry. Unable to Insert New Staff")
-							}	
+								fmt.Println("------------------")
+								fmt.Println("Sorry the username has been used, unable to insert new staff.")
+								fmt.Println("=======================")
+							}
 
 						case 5:
 
 							// EDIT A STAFF
+							staffs, _ := staffMenu.Show()
+							for i := 0; i < len(staffs); i++ {
+							fmt.Println("Staff Id           : ", staffs[i].ID)
+							fmt.Println("Staff Name         : ", staffs[i].Name)
+							fmt.Println("------------------")
+							}
+
+							// var staffName, updateName, updatePass string
+							// fmt.Print("Masukkan password baru: ")
+							// fmt.Scanln(&inputPass)
+							// isChanged, err := authMenu.GantiPassword(inputPass, res.ID)
+							// if err != nil {
+							// 	fmt.Println(err.Error())
+							// }
+							// if isChanged {
+							// 	fmt.Println("Berhasil ganti password")
+							// 	isLogin = false
+							// }
+
+							// UPDATE STAFF ACCOUNT
+							staffEdit := 1
+
+							for staffEdit != 9 {
+								fmt.Println("LIST OF STAFFS")
+								fmt.Println("------------------")
+								staffs, _ := staffMenu.Show()
+								if len(staffs) == 0 {
+									fmt.Println("Staffs is empty.")
+								} else {
+									for i := 0; i < len(staffs); i++ {
+										fmt.Println("Staff ID     : ", staffs[i].ID)
+										fmt.Println("Staff Name   : ", staffs[i].Name)
+										fmt.Println("------------------")
+									}
+								}
+					
+								fmt.Println("1. Update a staff accout")
+								fmt.Println("9. Back to main menu")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&staffEdit)
+
+								if staffEdit == 1 {
+									var staffID int
+									var newName string
+									var newPass string
+									fmt.Println("=======================")
+									fmt.Println("UPDATE STAFF ACCOUNT")
+									fmt.Println("------------------")
+									fmt.Print("Please insert id staff : ")
+									fmt.Scanln(&staffID)
+									fmt.Print("Please insert new name : ")
+									fmt.Scanln(&newName)
+									fmt.Print("Please insert new password : ")
+									fmt.Scanln(&newPass)
+
+									res, err := staffMenu.UpdateStaff(newName, newPass, staffID)
+
+									if err != nil {
+										fmt.Println("------------------")
+										fmt.Println(err.Error())
+										fmt.Println("=======================")
+									}
+
+									if res {
+										fmt.Println("------------------")
+										fmt.Println("Updated a staff account succesfully!")
+										fmt.Println("=======================")
+									}
+
+								} else {
+									fmt.Println("=======================")
+								}
+							}
 
 						case 6:
 
 							// DELETE A STAFF
+							var removeStaff staff.Staff
+							fmt.Println("\n", "== Remove Staff ==")
+							fmt.Print("Staff name: ")
+							fmt.Scanln(&removeStaff.Name)
+							res, err := staffMenu.Remove(removeStaff.Name)
+							if err != nil {
+								fmt.Println(err.Error())
+							}	
+							if res {
+								fmt.Println("Berhasil menghapus data")
+							} else {
+								fmt.Println("Gagal menghapus data")
+							}	
+							fmt.Println("=======================")
 
 						case 9:
 
