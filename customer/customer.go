@@ -47,16 +47,16 @@ func (cm *CustMenu) RemoveCustomer(nama string) (bool, error) {
 	}
 	res, err := delcust.Exec(nama)
 	if err != nil {
-		log.Println("error exec", err.Error())
+		log.Println("error exec")
 		return false, errors.New("error exec")
 	}
 	affctrow, err := res.RowsAffected()
 	if err != nil {
-		log.Println("no row affected", err.Error())
+		log.Println("no row affected")
 		return false, errors.New("no row affected")
 	}
 	if affctrow <= 0 {
-		log.Println("erorr at rowaffected", err.Error())
+		log.Println("erorr at rowaffected")
 		return false, errors.New("no row affected")
 	}
 
