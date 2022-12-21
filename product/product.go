@@ -104,6 +104,38 @@ func (pm *ProductMenu) Delete(productName string) (bool, error) {
 	return true, nil
 }
 
+func (pm *ProductMenu) DeleteAll() (bool, error) {
+	deleteAllQry, err := pm.DB.Prepare("DELETE FROM products;")
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Prepare delete product : ", err.Error())
+		return false, errors.New("Prepare statement delete product error.")
+	}
+
+	res, err := deleteAllQry.Exec()
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Delete product : ", err.Error())
+		return false, errors.New("Delete product error.")
+	}
+
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		fmt.Println("------------------")
+		log.Println("Afer delete product : ", err.Error())
+		return false, errors.New("Error after delete product.")
+	}
+
+	if affRows <= 0 {
+		fmt.Println("------------------")
+		log.Println("No rows affected.")
+		return false, errors.New("No record affected.")
+	}
+
+	return true, nil
+}
+
 func (pm *ProductMenu) Show() ([]Product, error) {
 	rows, err := pm.DB.Query("SELECT p.id_product, p.product_name, p.qty, s.name FROM staffs s, products p WHERE s.id_staff = p.id_staff")
 	if err != nil {
