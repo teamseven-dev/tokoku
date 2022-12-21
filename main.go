@@ -83,78 +83,10 @@ func main() {
 						case 1:
 
 							// NEW TRANSACTION
-							fmt.Println()
-							fmt.Println("ADD NEW TRANSACTION")
-							fmt.Println("===================")
-							datacustomer, _ := custMenu.ShowCustomer()
-							for i := 0; i < len(datacustomer); i++ {
-								fmt.Println("Customer ID	:", datacustomer[i].ID)
-								fmt.Println("Customer Name	:", datacustomer[i].Name)
-								fmt.Println("Inserted by 	:", datacustomer[i].StaffName)
-								fmt.Println("--------------------------")
-							}
-
-							var customerID int
-							fmt.Print("Insert Customer ID : ")
-							fmt.Scanln(&customerID)
-							fmt.Println("=======================")
-							trxID, err := transactionMenu.AddTransaction(res.ID, customerID)
-							if err != nil {
-								fmt.Println(err.Error())
-							}
-							if trxID < 0 {
-								fmt.Println("------------------")
-								fmt.Println("Error, please insert a correct customer ID")
-								fmt.Println("=======================")
-							}
-
-							fmt.Println()
-
-							var insertMore = true
-
-							for insertMore {
-								fmt.Println("LIST OF PRODUCTS")
-								fmt.Println("------------------")
-								products, _ := productMenu.Show()
-								if len(products) == 0 {
-									fmt.Println("No product available.")
-								} else {
-									for i := 0; i < len(products); i++ {
-										if products[i].Qty == 0 {
-											continue
-										}
-										fmt.Println("Product ID     : ", products[i].ID)
-										fmt.Println("Product Name   : ", products[i].Name)
-										fmt.Println("QTY            : ", products[i].Qty)
-										fmt.Println("Staff Name     : ", products[i].StaffName)
-										fmt.Println("--------------------------")
-									}
-								}
-								var productID, inputQty int
-								fmt.Println("Add a product to the cart")
-								fmt.Println("------------------")
-								fmt.Print("Insert Product ID : ")
-								fmt.Scanln(&productID)
-								fmt.Print("Insert amount : ")
-								fmt.Scanln(&inputQty)
-								fmt.Println("------------------")
-
-								insertProduct, err := transactionMenu.InsertItem(trxID, productID, inputQty)
-
-								if err != nil {
-									fmt.Println(err.Error())
-								}
-
-								if insertProduct {
-									fmt.Println("Added an item to the cart successfully!")
-									fmt.Println("----------------------")
-								} else {
-									fmt.Println("Unable to Input Transaction, please insert an item correctly")
-									fmt.Println("----------------------")
-								}
-
-							}
-
+							fmt.Println(transactionMenu.ShowTransaction(1))
+							fmt.Println(transactionMenu.ShowTransaction(2))
+							fmt.Println(transactionMenu.ShowTransaction(3))
+							fmt.Println(transactionMenu.ShowTransaction(4))
 						case 2:
 
 							// TRANSACTIONS HISTORY
