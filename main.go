@@ -313,25 +313,11 @@ func main() {
 								fmt.Println("LIST OF PRODUCTS")
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
-<<<<<<< HEAD
 								for i := 0; i < len(products); i++ {
 									fmt.Println("Product ID     : ", products[i].ID)
 									fmt.Println("Product Name   : ", products[i].Name)
 									fmt.Println("QTY            : ", products[i].Qty)
 									fmt.Println("Staff Name     : ", products[i].StaffName)
-=======
-
-								if len(products) > 0 {
-									for i := 0; i < len(products); i++ {
-										fmt.Println("Product Code   : ", products[i].ID)
-										fmt.Println("Product Name   : ", products[i].Name)
-										fmt.Println("QTY            : ", products[i].Qty)
-										fmt.Println("Staff Name     : ", products[i].StaffName)
-										fmt.Println("------------------")
-									}
-								} else {
-									fmt.Println("No product available.")
->>>>>>> 52c4d34 (update main.go)
 									fmt.Println("------------------")
 								}
 
@@ -346,7 +332,7 @@ func main() {
 									fmt.Println("=======================")
 									fmt.Println("ADD A PRODUCT STOCK")
 									fmt.Println("------------------")
-									fmt.Print("Please insert product id : ")
+									fmt.Print("Please insert product code : ")
 									fmt.Scanln(&prodID)
 									fmt.Print("Please insert additional Qty : ")
 									fmt.Scanln(&addQty)
@@ -379,24 +365,11 @@ func main() {
 								fmt.Println("LIST OF PRODUCTS")
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
-<<<<<<< HEAD
 								for i := 0; i < len(products); i++ {
 									fmt.Println("Product ID     : ", products[i].ID)
 									fmt.Println("Product Name   : ", products[i].Name)
 									fmt.Println("QTY            : ", products[i].Qty)
 									fmt.Println("Staff Name     : ", products[i].StaffName)
-=======
-								if len(products) > 0 {
-									for i := 0; i < len(products); i++ {
-										fmt.Println("Product Code   : ", products[i].ID)
-										fmt.Println("Product Name   : ", products[i].Name)
-										fmt.Println("QTY            : ", products[i].Qty)
-										fmt.Println("Staff Name     : ", products[i].StaffName)
-										fmt.Println("------------------")
-									}
-								} else {
-									fmt.Println("No product available.")
->>>>>>> 52c4d34 (update main.go)
 									fmt.Println("------------------")
 								}
 
@@ -452,7 +425,9 @@ func main() {
 								fmt.Println("Sorry unable to add a new customer, please insert correctly")
 							}
 							if err != nil {
+								fmt.Println("------------------")
 								fmt.Println(err.Error())
+								fmt.Println("=======================")
 							}
 
 						case 8:
