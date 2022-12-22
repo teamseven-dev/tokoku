@@ -514,7 +514,7 @@ func main() {
 										fmt.Println("------------------")
 									}
 								}
-					
+
 								fmt.Println("1. Update a staff accout")
 								fmt.Println("9. Back to main menu")
 								fmt.Print("Please choose a menu [1, 9] : ")
