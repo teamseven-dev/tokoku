@@ -8,11 +8,11 @@ import (
 )
 
 type Product struct {
-	ID int
-	Name string
-	Qty int
-	IDStaff int
-	StaffName string
+	ID          int
+	Name        string
+	Qty         int
+	IDStaff     int
+	StaffName   string
 	CreatedDate string
 	UpdatedDate string
 }
@@ -26,7 +26,9 @@ func (pm *ProductMenu) Duplicate(productName string) bool {
 	var idExist int
 	err := res.Scan(&idExist)
 	if err != nil {
-		log.Println("Result scan error", err.Error())
+		if err.Error() != "sql: no rows in result set" {
+			log.Println("Result scan error", err.Error())
+		}
 		return false
 	}
 	return true
@@ -72,15 +74,15 @@ func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
 	return int(id), nil
 }
 
-func (pm *ProductMenu) Delete(productName string) (bool, error) {
-	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE product_name = ?;")
+func (pm *ProductMenu) Delete(id int) (bool, error) {
+	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE id_product = ?;")
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Prepare delete product : ", err.Error())
 		return false, errors.New("Prepare statement delete product error.")
 	}
 
-	res, err := deleteQry.Exec(productName)
+	res, err := deleteQry.Exec(id)
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Delete product : ", err.Error())
@@ -140,7 +142,7 @@ func (pm *ProductMenu) Show() ([]Product, error) {
 	rows, err := pm.DB.Query("SELECT p.id_product, p.product_name, p.qty, s.name FROM staffs s, products p WHERE s.id_staff = p.id_staff")
 	if err != nil {
 		log.Println("------------------")
-    	log.Println(err)
+		log.Println(err)
 	}
 
 	res := []Product{} // creating empty slice
@@ -186,14 +188,14 @@ func (pm *ProductMenu) UpdateName(newName string, id int) (bool, error) {
 	return true, nil
 }
 
-func (pm *ProductMenu) UpdateStock(addQty, id int) (bool, error) {
-	updateStockQry, err := pm.DB.Prepare("UPDATE products SET qty = qty + ? WHERE id_product = ?")
+func (pm *ProductMenu) InsertStock(addQty, id int) (bool, error) {
+	insertStockQry, err := pm.DB.Prepare("UPDATE products SET qty = qty + ? WHERE id_product = ?")
 	if err != nil {
 		log.Println("Prepare update product stock : ", err.Error())
 		return false, errors.New("Prepare statement update product stock error.")
 	}
 
-	res, err := updateStockQry.Exec(addQty, id)
+	res, err := insertStockQry.Exec(addQty, id)
 	if err != nil {
 		log.Println("Update product stock : ", err.Error())
 		return false, errors.New("Update product stock error.")
