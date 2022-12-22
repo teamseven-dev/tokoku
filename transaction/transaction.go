@@ -51,6 +51,28 @@ func (tm *TransMenu) AddTransaction(idstaff, IdCustomer int) (int, error) {
 }
 
 // TRANSACTION SHOW
+func (tm *TransMenu) ShowTransaction(id int) ([]Transaction, error) {
+	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, t.created_date FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer WHERE t.id_transaction = ?", id)
+	if err != nil {
+		log.Println("Prepare show transaction table", err.Error())
+		return []Transaction{}, errors.New("prepare statement show transaction table error")
+	}
+
+	res := []Transaction{} // creating empty slice
+	defer showTransQry.Close()
+
+	for showTransQry.Next() {
+		transaction := Transaction{} // creating new struct for every row
+		err = showTransQry.Scan(&transaction.ID, &transaction.StaffName, &transaction.CustomerName, &transaction.CreatedDate)
+		if err != nil {
+			log.Println("------------------")
+			log.Println(err)
+		}
+		res = append(res, transaction)
+	}
+
+	return res, nil
+}
 
 // SHOW ALL TRANSACTIONS
 
@@ -78,29 +100,6 @@ func (tm *TransMenu) InsertItem(idTrx, idProd, qty int) (bool, error) {
 	return true, nil
 }
 
-// TRANSACTION SHOW
-func (tm *TransMenu) ShowTransaction(id int) ([]Transaction, error) {
-	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, t.created_date FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer WHERE t.id_transaction = ?", id)
-	if err != nil {
-		log.Println("Prepare show transaction table", err.Error())
-		return []Transaction{}, errors.New("prepare statement show transaction table error")
-	}
-
-	res := []Transaction{} // creating empty slice
-	defer showTransQry.Close()
-
-	for showTransQry.Next() {
-		transaction := Transaction{} // creating new struct for every row
-		err = showTransQry.Scan(&transaction.ID, &transaction.StaffName, &transaction.CustomerName, &transaction.CreatedDate)
-		if err != nil {
-			log.Println("------------------")
-			log.Println(err)
-		}
-		res = append(res, transaction)
-	}
-
-	return res, nil
-}
 
 // ITEMS SHOW
 
