@@ -81,7 +81,7 @@ func main() {
 
 						switch choice {
 						case 1:
-							
+
 							// NEW TRANSACTION
 							fmt.Println()
 							fmt.Println("ADD NEW TRANSACTION")
@@ -106,8 +106,8 @@ func main() {
 								fmt.Println("------------------")
 								fmt.Println("Error, please insert a correct customer ID")
 								fmt.Println("=======================")
-							} 
-								
+							}
+
 							fmt.Println()
 
 							var insertMore = true
@@ -217,21 +217,19 @@ func main() {
 									fmt.Println("==================================")
 								}
 							}
-						
-							
-						
+
 						case 2:
 
 							// TRANSACTIONS HISTORY
 							fmt.Println()
 							fmt.Println("TRANSACTIONS HISTORY")
 							fmt.Println("------------------")
-							
+
 							trxData, err := transactionMenu.ShowAllTransaction()
 							if err != nil {
 								fmt.Println("Unable to show transaction :", err.Error())
 							}
-							
+
 							for i := 0; i < len(trxData); i++ {
 								fmt.Println("Trx ID   : ", trxData[i].ID)
 								fmt.Println("Cashier  : ", trxData[i].StaffName)
@@ -265,7 +263,7 @@ func main() {
 									}
 
 									fmt.Println()
-									
+
 									fmt.Println("----------------------------------")
 									for i := 0; i < len(trxData); i++ {
 										fmt.Println("Trx ID : ", trxData[i].ID)
@@ -288,7 +286,7 @@ func main() {
 									showTrx = false
 								}
 							}
-							
+
 						case 3:
 
 							// INSERT A NEW PRODUCT
@@ -541,7 +539,7 @@ func main() {
 							if err != nil {
 								fmt.Println("Unable to show transaction :", err.Error())
 							}
-							
+
 							for i := 0; i < len(trxData); i++ {
 								fmt.Println("Trx ID   : ", trxData[i].ID)
 								fmt.Println("Cashier  : ", trxData[i].StaffName)
@@ -550,13 +548,13 @@ func main() {
 								fmt.Println("----------------------------------")
 							}
 							for trxMenu != 9 {
-	
+
 								fmt.Println("1. Delete a transaction")
 								fmt.Println("9. Back to main menu")
 								fmt.Println("------------------")
 								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&trxMenu)
-	
+
 								if trxMenu == 1 {
 									var delTrxID int
 									fmt.Println("=======================")
@@ -564,15 +562,15 @@ func main() {
 									fmt.Println("------------------")
 									fmt.Print("Please insert a transaction ID : ")
 									fmt.Scanln(&delTrxID)
-		
+
 									res, err := transactionMenu.Delete(delTrxID)
-		
+
 									if err != nil {
 										fmt.Println("------------------")
 										fmt.Println(err.Error())
 										fmt.Println("=======================")
 									}
-		
+
 									if res {
 										fmt.Println("------------------")
 										fmt.Printf("Deleted a transaction successfully!")
@@ -630,7 +628,7 @@ func main() {
 
 									if res {
 										fmt.Println("------------------")
-										fmt.Printf("Product `%s` has been deleted successfully.\n", products[productID].Name)
+										fmt.Printf("Product `%d` has been deleted successfully.\n", productID)
 										fmt.Println("=======================")
 									}
 
@@ -680,7 +678,7 @@ func main() {
 								fmt.Println("Inserted by  	: ", customers[i].StaffName)
 								fmt.Println("------------------")
 							}
-							
+
 							fmt.Println("DELETE A CUSTOMER")
 							fmt.Println("------------------")
 							fmt.Print("Insert Customer Name : ")
@@ -810,7 +808,7 @@ func main() {
 
 								if staffDelete == 1 {
 
-									// DELETE A PRODUCT
+									// DELETE A STAFF
 									var removeStaff staff.Staff
 									fmt.Println("=======================")
 									fmt.Println("DELETE STAFF")

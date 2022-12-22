@@ -75,6 +75,12 @@ func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
 }
 
 func (pm *ProductMenu) Delete(id int) (bool, error) {
+	turnoffFK, _ := pm.DB.Prepare("SET FOREIGN_KEY_CHECKS=0")
+	res1, _ := turnoffFK.Exec()
+	ToffFK, _ := res1.RowsAffected()
+	if ToffFK > 0 {
+		fmt.Println("error Turn off FK")
+	}
 	deleteQry, err := pm.DB.Prepare("DELETE FROM products WHERE id_product = ?;")
 	if err != nil {
 		fmt.Println("------------------")
@@ -102,7 +108,12 @@ func (pm *ProductMenu) Delete(id int) (bool, error) {
 		log.Println("No rows affected.")
 		return false, errors.New("No record affected.")
 	}
-
+	turnonFK, _ := pm.DB.Prepare("SET FOREIGN_KEY_CHECKS=1")
+	res2, _ := turnonFK.Exec()
+	TonFK, _ := res2.RowsAffected()
+	if TonFK > 0 {
+		fmt.Println("error Turn on FK")
+	}
 	return true, nil
 }
 

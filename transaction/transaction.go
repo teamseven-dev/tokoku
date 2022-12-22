@@ -98,6 +98,7 @@ func (tm *TransMenu) ShowAllTransaction() ([]Transaction, error) {
 
 	return res, nil
 }
+
 // INSERT ITEMS
 func (tm *TransMenu) InsertItem(idTrx, idProd, qty int) (bool, error) {
 	insertItem, err := tm.DB.Prepare("INSERT INTO items(id_transaction,id_product,qty) VALUE (?,?,?)")
