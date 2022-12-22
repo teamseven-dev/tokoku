@@ -81,7 +81,7 @@ func main() {
 
 						switch choice {
 						case 1:
-
+							
 							// NEW TRANSACTION
 							fmt.Println()
 							fmt.Println("ADD NEW TRANSACTION")
@@ -106,12 +106,12 @@ func main() {
 								fmt.Println("------------------")
 								fmt.Println("Error, please insert a correct customer ID")
 								fmt.Println("=======================")
-							}
-
+							} 
+								
 							fmt.Println()
 
 							var insertMore = true
-
+							var trxMenu int
 							for insertMore {
 								fmt.Println("LIST OF PRODUCTS")
 								fmt.Println("------------------")
@@ -138,8 +138,19 @@ func main() {
 								fmt.Print("Insert amount : ")
 								fmt.Scanln(&inputQty)
 								fmt.Println("------------------")
-
+								cureentQty, _ := productMenu.GetQty(productID)
+								if inputQty > cureentQty {
+									fmt.Println("----------------------")
+									fmt.Printf("Unable to insert %d, only %d stock remaining\n", inputQty, cureentQty)
+									fmt.Println("----------------------")
+									continue
+								}
 								insertProduct, err := transactionMenu.InsertItem(trxID, productID, inputQty)
+								uptStock, _ := productMenu.UpdateStock(inputQty, productID)
+								if !uptStock {
+									fmt.Println("Error updating stock")
+									fmt.Println("----------------------")
+								}
 
 								if err != nil {
 									fmt.Println(err.Error())
@@ -153,12 +164,93 @@ func main() {
 									fmt.Println("----------------------")
 								}
 
-							}
+								fmt.Println()
 
+								fmt.Println("CART")
+								fmt.Println("----------------------")
+								items, _ := transactionMenu.ShowItems(trxID)
+								for i := 0; i < len(items); i++ {
+									fmt.Println("Product ID     : ", items[i].IDProduct)
+									fmt.Println("Product Name   : ", items[i].ProductName)
+									fmt.Println("QTY            : ", items[i].Qty)
+									fmt.Println("--------------------------")
+								}
+
+								fmt.Println()
+
+								fmt.Println("1. Insert more item")
+								fmt.Println("2. Checkout the cart")
+								fmt.Println("----------------------")
+								fmt.Print("Choose a menu [1, 2] : ")
+								fmt.Scanln(&trxMenu)
+								fmt.Println("----------------------")
+								fmt.Println()
+								if trxMenu == 2 {
+									insertMore = false
+
+									trxData, err := transactionMenu.ShowTransaction(trxID)
+									if err != nil {
+										fmt.Println("Unable to show transaction :", err.Error())
+									}
+
+									fmt.Println("==================================")
+									fmt.Println("             RECEIPT")
+									fmt.Println("----------------------------------")
+
+									for i := 0; i < len(trxData); i++ {
+										fmt.Println("Receipt ID : ", trxData[i].ID)
+										fmt.Println("----------------------------------")
+										fmt.Println("Cashier  : ", trxData[i].StaffName)
+										fmt.Println("Customer : ", trxData[i].CustomerName)
+										fmt.Println("Date  	 : ", trxData[i].CreatedDate)
+										fmt.Println("----------------------------------")
+									}
+									for i := 0; i < len(items); i++ {
+										fmt.Println("Product ID     : ", items[i].IDProduct)
+										fmt.Println("Product Name   : ", items[i].ProductName)
+										fmt.Println("QTY            : ", items[i].Qty)
+										fmt.Println("----------------------------------")
+									}
+
+									fmt.Println("Thank You for shopping in TOKOKU!")
+									fmt.Println("        Have a nice day ^^")
+									fmt.Println("==================================")
+								}
+							}
+						
+							
+						
 						case 2:
 
 							// TRANSACTIONS HISTORY
+							fmt.Println()
+							fmt.Println("TRANSACTIONS HISTORY")
+							fmt.Println("------------------")
+							
+							trxData, err := transactionMenu.ShowAllTransaction()
+							if err != nil {
+								fmt.Println("Unable to show transaction :", err.Error())
+							}
+							
+							for i := 0; i < len(trxData); i++ {
+								fmt.Println("Trx ID   : ", trxData[i].ID)
+								fmt.Println("Cashier  : ", trxData[i].StaffName)
+								fmt.Println("Customer : ", trxData[i].CustomerName)
+								fmt.Println("Date  	 : ", trxData[i].CreatedDate)
+								fmt.Println("----------------------------------")
+							}
 
+							var showTrx = true
+							for showTrx {
+								var trxMenu string
+								fmt.Print("Back to main menu? [Y / N] : ")
+								fmt.Scanln(&trxMenu)
+
+								if trxMenu == "Y" || trxMenu == "y" {
+									showTrx = false
+								}
+							}
+							
 						case 3:
 
 							// INSERT A NEW PRODUCT
@@ -398,6 +490,55 @@ func main() {
 						case 1:
 
 							// DELETE A TRANSACTION
+							trxMenu := 1
+							fmt.Println()
+							fmt.Println("=======================")
+							fmt.Println("LIST OF TRANSACTIONS")
+							fmt.Println("------------------")
+
+							trxData, err := transactionMenu.ShowAllTransaction()
+							if err != nil {
+								fmt.Println("Unable to show transaction :", err.Error())
+							}
+							
+							for i := 0; i < len(trxData); i++ {
+								fmt.Println("Trx ID   : ", trxData[i].ID)
+								fmt.Println("Cashier  : ", trxData[i].StaffName)
+								fmt.Println("Customer : ", trxData[i].CustomerName)
+								fmt.Println("Date  	 : ", trxData[i].CreatedDate)
+								fmt.Println("----------------------------------")
+							}
+							for trxMenu != 9 {
+	
+								fmt.Println("1. Delete a transaction")
+								fmt.Println("9. Back to main menu")
+								fmt.Println("------------------")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&trxMenu)
+	
+								if trxMenu == 1 {
+									var delTrxID int
+									fmt.Println("=======================")
+									fmt.Println("DELETE A TRANSACTION")
+									fmt.Println("------------------")
+									fmt.Print("Please insert a transaction ID : ")
+									fmt.Scanln(&delTrxID)
+		
+									res, err := transactionMenu.Delete(delTrxID)
+		
+									if err != nil {
+										fmt.Println("------------------")
+										fmt.Println(err.Error())
+										fmt.Println("=======================")
+									}
+		
+									if res {
+										fmt.Println("------------------")
+										fmt.Printf("Deleted a transaction successfully!")
+										fmt.Println("=======================")
+									}
+								}
+							}
 
 						case 2:
 
@@ -498,7 +639,7 @@ func main() {
 								fmt.Println("Inserted by  	: ", customers[i].StaffName)
 								fmt.Println("------------------")
 							}
-
+							
 							fmt.Println("DELETE A CUSTOMER")
 							fmt.Println("------------------")
 							fmt.Print("Insert Customer Name : ")
@@ -518,7 +659,7 @@ func main() {
 							fmt.Println("=======================")
 
 						case 4:
-						
+
 							// INSERT A NEW STAFF
 							var newStaff staff.Staff
 							fmt.Println("INSERT A NEW STAFF")
@@ -541,12 +682,12 @@ func main() {
 								fmt.Println("Sorry the username has been used, unable to insert new staff.")
 								fmt.Println("=======================")
 							}
-						
+
 						case 5:
-						
+
 							// EDIT A STAFF
 							staffEdit := 1
-						
+
 							for staffEdit != 9 {
 								fmt.Println("LIST OF STAFFS")
 								fmt.Println("------------------")
@@ -560,12 +701,12 @@ func main() {
 										fmt.Println("------------------")
 									}
 								}
-						
+
 								fmt.Println("1. Update a staff account")
 								fmt.Println("9. Back to main menu")
 								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&staffEdit)
-						
+
 								if staffEdit == 1 {
 									var staffID int
 									var newName string
@@ -579,31 +720,31 @@ func main() {
 									fmt.Scanln(&newName)
 									fmt.Print("Please insert new password : ")
 									fmt.Scanln(&newPass)
-						
+
 									res, err := staffMenu.UpdateStaff(newName, newPass, staffID)
-						
+
 									if err != nil {
 										fmt.Println("------------------")
 										fmt.Println(err.Error())
 										fmt.Println("=======================")
 									}
-						
+
 									if res {
 										fmt.Println("------------------")
 										fmt.Println("Updated a staff account succesfully!")
 										fmt.Println("=======================")
 									}
-						
+
 								} else {
 									fmt.Println("=======================")
 								}
 							}
-						
+
 						case 6:
-						
+
 							// DELETE A STAFF
 							staffDelete := 1
-						
+
 							for staffDelete != 9 {
 								fmt.Println("LIST OF STAFFS")
 								fmt.Println("------------------")
@@ -617,7 +758,7 @@ func main() {
 										fmt.Println("------------------")
 									}
 								}
-						
+
 								fmt.Println("=======================")
 								fmt.Println("1. Delete a staff")
 								fmt.Println("2. Delete all staffs")
@@ -625,9 +766,9 @@ func main() {
 								fmt.Println("------------------")
 								fmt.Print("Please choose a menu [1, 2, 9] : ")
 								fmt.Scanln(&staffDelete)
-						
+
 								if staffDelete == 1 {
-						
+
 									// DELETE A PRODUCT
 									var removeStaff staff.Staff
 									fmt.Println("=======================")
@@ -648,34 +789,34 @@ func main() {
 										fmt.Println("Cannot delete staff")
 										fmt.Println("=======================")
 									}
-						
+
 								} else if staffDelete == 2 {
-						
+
 									// DELETE ALL STAFFS
 									var deleteAll string
 									fmt.Println("------------------")
 									fmt.Print("Are you sure to delete all the staffs [Y, N] : ")
 									fmt.Scanln(&deleteAll)
-						
+
 									if deleteAll == "Y" || deleteAll == "y" {
 										res, err := staffMenu.DeleteAll()
-						
+
 										if err != nil {
 											fmt.Println("------------------")
 											fmt.Println(err.Error())
 											fmt.Println("=======================")
 										}
-						
+
 										if res {
 											fmt.Println("=======================")
 											fmt.Println("All staffs has been deleted successfully!")
 											fmt.Println("=======================")
 										}
-						
+
 									} else {
 										fmt.Println("=======================")
 									}
-						
+
 								} else {
 									fmt.Println("=======================")
 								}

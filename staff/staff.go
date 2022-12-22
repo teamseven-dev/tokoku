@@ -26,9 +26,9 @@ func (sm *StaffMenu) Login(name string, password string) (Staff, error) {
 		log.Println("prepare insert staff ", err.Error())
 		return Staff{}, errors.New("prepare statement insert staff error")
 	}
-
+	
 	row := loginQry.QueryRow(name, password)
-
+	
 	if row.Err() != nil {
 		fmt.Println("------------------")
 		log.Println("login query ", row.Err().Error())
@@ -36,15 +36,15 @@ func (sm *StaffMenu) Login(name string, password string) (Staff, error) {
 	}
 	res := Staff{}
 	err = row.Scan(&res.ID)
-
+	
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("after login query ", err.Error())
 		return Staff{}, errors.New("tidak bisa login, kesalahan setelah error")
 	}
-
+	
 	res.Name = name
-
+	
 	return res, nil
 }
 

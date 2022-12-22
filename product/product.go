@@ -214,3 +214,43 @@ func (pm *ProductMenu) InsertStock(addQty, id int) (bool, error) {
 
 	return true, nil
 }
+
+func (pm *ProductMenu) UpdateStock(addQty, id int) (bool, error) {
+	updateStockQry, err := pm.DB.Prepare("UPDATE products SET qty = qty - ? WHERE id_product = ?")
+	if err != nil {
+		log.Println("Prepare update product stock : ", err.Error())
+		return false, errors.New("Prepare statement update product stock error.")
+	}
+
+	res, err := updateStockQry.Exec(addQty, id)
+	if err != nil {
+		log.Println("Update product stock : ", err.Error())
+		return false, errors.New("Update product stock error.")
+	}
+
+	affRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("After update product stock : ", err.Error())
+		return false, errors.New("After update product stock error.")
+	}
+
+	if affRows <= 0 {
+		log.Println("No rows affected.")
+		return false, errors.New("No record affected.")
+	}
+
+	return true, nil
+}
+
+func (pm *ProductMenu) GetQty(id int) (int, error) {
+	getQty := pm.DB.QueryRow("SELECT qty FROM products WHERE id_product = ?", id)
+	var qty int
+	err := getQty.Scan(&qty)
+	if err != nil {
+		if err.Error() != "sql: no rows in result set" {
+			log.Println("Result scan error", err.Error())
+		}
+		return 0, errors.New("Error when getting qty.")
+	}
+	return qty, nil
+}
