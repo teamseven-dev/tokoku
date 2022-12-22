@@ -83,10 +83,78 @@ func main() {
 						case 1:
 
 							// NEW TRANSACTION
-							fmt.Println(transactionMenu.ShowTransaction(1))
-							fmt.Println(transactionMenu.ShowTransaction(2))
-							fmt.Println(transactionMenu.ShowTransaction(3))
-							fmt.Println(transactionMenu.ShowTransaction(4))
+							fmt.Println()
+							fmt.Println("ADD NEW TRANSACTION")
+							fmt.Println("===================")
+							datacustomer, _ := custMenu.ShowCustomer()
+							for i := 0; i < len(datacustomer); i++ {
+								fmt.Println("Customer ID	:", datacustomer[i].ID)
+								fmt.Println("Customer Name	:", datacustomer[i].Name)
+								fmt.Println("Inserted by 	:", datacustomer[i].StaffName)
+								fmt.Println("--------------------------")
+							}
+
+							var customerID int
+							fmt.Print("Insert Customer ID : ")
+							fmt.Scanln(&customerID)
+							fmt.Println("=======================")
+							trxID, err := transactionMenu.AddTransaction(res.ID, customerID)
+							if err != nil {
+								fmt.Println(err.Error())
+							}
+							if trxID < 0 {
+								fmt.Println("------------------")
+								fmt.Println("Error, please insert a correct customer ID")
+								fmt.Println("=======================")
+							}
+
+							fmt.Println()
+
+							var insertMore = true
+
+							for insertMore {
+								fmt.Println("LIST OF PRODUCTS")
+								fmt.Println("------------------")
+								products, _ := productMenu.Show()
+								if len(products) == 0 {
+									fmt.Println("No product available.")
+								} else {
+									for i := 0; i < len(products); i++ {
+										if products[i].Qty == 0 {
+											continue
+										}
+										fmt.Println("Product ID     : ", products[i].ID)
+										fmt.Println("Product Name   : ", products[i].Name)
+										fmt.Println("QTY            : ", products[i].Qty)
+										fmt.Println("Staff Name     : ", products[i].StaffName)
+										fmt.Println("--------------------------")
+									}
+								}
+								var productID, inputQty int
+								fmt.Println("Add a product to the cart")
+								fmt.Println("------------------")
+								fmt.Print("Insert Product ID : ")
+								fmt.Scanln(&productID)
+								fmt.Print("Insert amount : ")
+								fmt.Scanln(&inputQty)
+								fmt.Println("------------------")
+
+								insertProduct, err := transactionMenu.InsertItem(trxID, productID, inputQty)
+
+								if err != nil {
+									fmt.Println(err.Error())
+								}
+
+								if insertProduct {
+									fmt.Println("Added an item to the cart successfully!")
+									fmt.Println("----------------------")
+								} else {
+									fmt.Println("Unable to Input Transaction, please insert an item correctly")
+									fmt.Println("----------------------")
+								}
+
+							}
+
 						case 2:
 
 							// TRANSACTIONS HISTORY
@@ -121,19 +189,17 @@ func main() {
 						case 4:
 
 							// SHOW PRODUCTS
-							prodMenu := 1
-
-							for prodMenu != 9 {
-								fmt.Println("LIST OF PRODUCTS")
-								fmt.Println("------------------")
-								products, _ := productMenu.Show()
-								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Code   : ", products[i].ID)
+							fmt.Println()
+							fmt.Println("LIST OF PRODUCTS")
+							fmt.Println("------------------")
+							products, _ := productMenu.Show()
+							for i := 0; i < len(products); i++ {
+								fmt.Println("Product ID     : ", products[i].ID)
 								fmt.Println("Product Name   : ", products[i].Name)
 								fmt.Println("QTY            : ", products[i].Qty)
 								fmt.Println("Staff Name     : ", products[i].StaffName)
 								fmt.Println("------------------")
-								}
+							}
 
 							var showPrd = true
 							for showPrd {
@@ -156,11 +222,11 @@ func main() {
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
 								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Code   : ", products[i].ID)
-								fmt.Println("Product Name   : ", products[i].Name)
-								fmt.Println("QTY            : ", products[i].Qty)
-								fmt.Println("Staff Name     : ", products[i].StaffName)
-								fmt.Println("------------------")
+									fmt.Println("Product ID     : ", products[i].ID)
+									fmt.Println("Product Name   : ", products[i].Name)
+									fmt.Println("QTY            : ", products[i].Qty)
+									fmt.Println("Staff Name     : ", products[i].StaffName)
+									fmt.Println("------------------")
 								}
 
 								fmt.Println("1. add stock")
@@ -207,11 +273,11 @@ func main() {
 								fmt.Println("------------------")
 								products, _ := productMenu.Show()
 								for i := 0; i < len(products); i++ {
-								fmt.Println("Product Code   : ", products[i].ID)
-								fmt.Println("Product Name   : ", products[i].Name)
-								fmt.Println("QTY            : ", products[i].Qty)
-								fmt.Println("Staff Name     : ", products[i].StaffName)
-								fmt.Println("------------------")
+									fmt.Println("Product ID     : ", products[i].ID)
+									fmt.Println("Product Name   : ", products[i].Name)
+									fmt.Println("QTY            : ", products[i].Qty)
+									fmt.Println("Staff Name     : ", products[i].StaffName)
+									fmt.Println("------------------")
 								}
 
 								fmt.Println("1. update a product name")
@@ -346,11 +412,11 @@ func main() {
 									fmt.Println("No product available.")
 								} else {
 									for i := 0; i < len(products); i++ {
-									fmt.Println("Product Code   : ", products[i].ID)
-									fmt.Println("Product Name   : ", products[i].Name)
-									fmt.Println("QTY            : ", products[i].Qty)
-									fmt.Println("Staff Name     : ", products[i].StaffName)
-									fmt.Println("------------------")
+										fmt.Println("Product ID     : ", products[i].ID)
+										fmt.Println("Product Name   : ", products[i].Name)
+										fmt.Println("QTY            : ", products[i].Qty)
+										fmt.Println("Staff Name     : ", products[i].StaffName)
+										fmt.Println("------------------")
 									}
 								}
 
@@ -372,8 +438,8 @@ func main() {
 									fmt.Print("Please insert a product code : ")
 									fmt.Scanln(&productID)
 
-									res, err := productMenu.Delete(productName)
-									
+									res, err := productMenu.Delete(productID)
+
 									if err != nil {
 										fmt.Println("------------------")
 										fmt.Println(err.Error())
@@ -452,7 +518,7 @@ func main() {
 							fmt.Println("=======================")
 
 						case 4:
-
+						
 							// INSERT A NEW STAFF
 							var newStaff staff.Staff
 							fmt.Println("INSERT A NEW STAFF")
@@ -475,32 +541,12 @@ func main() {
 								fmt.Println("Sorry the username has been used, unable to insert new staff.")
 								fmt.Println("=======================")
 							}
-
+						
 						case 5:
-
+						
 							// EDIT A STAFF
-							staffs, _ := staffMenu.Show()
-							for i := 0; i < len(staffs); i++ {
-							fmt.Println("Staff Id           : ", staffs[i].ID)
-							fmt.Println("Staff Name         : ", staffs[i].Name)
-							fmt.Println("------------------")
-							}
-
-							// var staffName, updateName, updatePass string
-							// fmt.Print("Masukkan password baru: ")
-							// fmt.Scanln(&inputPass)
-							// isChanged, err := authMenu.GantiPassword(inputPass, res.ID)
-							// if err != nil {
-							// 	fmt.Println(err.Error())
-							// }
-							// if isChanged {
-							// 	fmt.Println("Berhasil ganti password")
-							// 	isLogin = false
-							// }
-
-							// UPDATE STAFF ACCOUNT
 							staffEdit := 1
-
+						
 							for staffEdit != 9 {
 								fmt.Println("LIST OF STAFFS")
 								fmt.Println("------------------")
@@ -514,12 +560,12 @@ func main() {
 										fmt.Println("------------------")
 									}
 								}
-
-								fmt.Println("1. Update a staff accout")
+						
+								fmt.Println("1. Update a staff account")
 								fmt.Println("9. Back to main menu")
 								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&staffEdit)
-
+						
 								if staffEdit == 1 {
 									var staffID int
 									var newName string
@@ -533,43 +579,107 @@ func main() {
 									fmt.Scanln(&newName)
 									fmt.Print("Please insert new password : ")
 									fmt.Scanln(&newPass)
-
+						
 									res, err := staffMenu.UpdateStaff(newName, newPass, staffID)
-
+						
 									if err != nil {
 										fmt.Println("------------------")
 										fmt.Println(err.Error())
 										fmt.Println("=======================")
 									}
-
+						
 									if res {
 										fmt.Println("------------------")
 										fmt.Println("Updated a staff account succesfully!")
 										fmt.Println("=======================")
 									}
-
+						
 								} else {
 									fmt.Println("=======================")
 								}
 							}
-
+						
 						case 6:
-
+						
 							// DELETE A STAFF
-							var removeStaff staff.Staff
-							fmt.Println("\n", "== Remove Staff ==")
-							fmt.Print("Staff name: ")
-							fmt.Scanln(&removeStaff.Name)
-							res, err := staffMenu.Remove(removeStaff.Name)
-							if err != nil {
-								fmt.Println(err.Error())
-							}	
-							if res {
-								fmt.Println("Berhasil menghapus data")
-							} else {
-								fmt.Println("Gagal menghapus data")
-							}	
-							fmt.Println("=======================")
+							staffDelete := 1
+						
+							for staffDelete != 9 {
+								fmt.Println("LIST OF STAFFS")
+								fmt.Println("------------------")
+								staffs, _ := staffMenu.Show()
+								if len(staffs) == 0 {
+									fmt.Println("Staffs is empty.")
+								} else {
+									for i := 0; i < len(staffs); i++ {
+										fmt.Println("Staff ID     : ", staffs[i].ID)
+										fmt.Println("Staff Name   : ", staffs[i].Name)
+										fmt.Println("------------------")
+									}
+								}
+						
+								fmt.Println("=======================")
+								fmt.Println("1. Delete a staff")
+								fmt.Println("2. Delete all staffs")
+								fmt.Println("9. Back to main menu")
+								fmt.Println("------------------")
+								fmt.Print("Please choose a menu [1, 2, 9] : ")
+								fmt.Scanln(&staffDelete)
+						
+								if staffDelete == 1 {
+						
+									// DELETE A PRODUCT
+									var removeStaff staff.Staff
+									fmt.Println("=======================")
+									fmt.Println("DELETE STAFF")
+									fmt.Println("------------------")
+									fmt.Print("Please insert staff name : ")
+									fmt.Scanln(&removeStaff.Name)
+									res, err := staffMenu.Remove(removeStaff.Name)
+									if err != nil {
+										fmt.Println(err.Error())
+									}
+									if res {
+										fmt.Println("------------------")
+										fmt.Println("Staff", removeStaff.Name, "has been deleted successfully!")
+										fmt.Println("=======================")
+									} else {
+										fmt.Println("------------------")
+										fmt.Println("Cannot delete staff")
+										fmt.Println("=======================")
+									}
+						
+								} else if staffDelete == 2 {
+						
+									// DELETE ALL STAFFS
+									var deleteAll string
+									fmt.Println("------------------")
+									fmt.Print("Are you sure to delete all the staffs [Y, N] : ")
+									fmt.Scanln(&deleteAll)
+						
+									if deleteAll == "Y" || deleteAll == "y" {
+										res, err := staffMenu.DeleteAll()
+						
+										if err != nil {
+											fmt.Println("------------------")
+											fmt.Println(err.Error())
+											fmt.Println("=======================")
+										}
+						
+										if res {
+											fmt.Println("=======================")
+											fmt.Println("All staffs has been deleted successfully!")
+											fmt.Println("=======================")
+										}
+						
+									} else {
+										fmt.Println("=======================")
+									}
+						
+								} else {
+									fmt.Println("=======================")
+								}
+							}
 
 						case 9:
 
@@ -586,3 +696,7 @@ func main() {
 		}
 	}
 }
+
+
+
+

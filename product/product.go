@@ -214,5 +214,3 @@ func (pm *ProductMenu) InsertStock(addQty, id int) (bool, error) {
 
 	return true, nil
 }
-
-func (pm *ProductMenu) QtyUpdated()
