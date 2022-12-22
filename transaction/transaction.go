@@ -53,7 +53,7 @@ func (tm *TransMenu) AddTransaction(idstaff, IdCustomer int) (int, error) {
 
 // TRANSACTION SHOW
 func (tm *TransMenu) ShowTransaction(id int) ([]Transaction, error) {
-	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, t.created_date FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer WHERE t.id_transaction = ?", id)
+	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, DATE_FORMAT(t.created_date, '%d/%m/%Y %h:%i:%s') FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer WHERE t.id_transaction = ?", id)
 	if err != nil {
 		log.Println("Prepare show transaction table", err.Error())
 		return []Transaction{}, errors.New("prepare statement show transaction table error")
@@ -77,7 +77,7 @@ func (tm *TransMenu) ShowTransaction(id int) ([]Transaction, error) {
 
 // SHOW ALL TRANSACTIONS
 func (tm *TransMenu) ShowAllTransaction() ([]Transaction, error) {
-	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, t.created_date FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer")
+	showTransQry, err := tm.DB.Query("SELECT t.id_transaction, s.name, c.name, DATE_FORMAT(t.created_date, '%d/%m/%Y %h:%i:%s') FROM transactions t JOIN staffs s ON t.id_staff  = s.id_staff JOIN customers c ON t.id_customer = c.id_customer")
 	if err != nil {
 		log.Println("Prepare show transaction table", err.Error())
 		return []Transaction{}, errors.New("prepare statement show transaction table error")

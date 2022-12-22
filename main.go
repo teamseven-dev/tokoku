@@ -242,11 +242,49 @@ func main() {
 
 							var showTrx = true
 							for showTrx {
-								var trxMenu string
-								fmt.Print("Back to main menu? [Y / N] : ")
+								var trxMenu int
+								fmt.Println("1. Show the detail")
+								fmt.Println("9. Back to main menu")
+								fmt.Println("------------------")
+								fmt.Print("Please choose a menu [1, 9] : ")
 								fmt.Scanln(&trxMenu)
 
-								if trxMenu == "Y" || trxMenu == "y" {
+								if trxMenu == 1 {
+									var trxDetail int
+									fmt.Println("------------------")
+									fmt.Print("Please input a Trx ID : ")
+									fmt.Scanln(&trxDetail)
+
+									trxData, err := transactionMenu.ShowTransaction(trxDetail)
+									if err != nil {
+										fmt.Println("Unable to show transaction :", err.Error())
+									}
+									items, _ := transactionMenu.ShowItems(trxDetail)
+									if err != nil {
+										fmt.Println("Unable to show items :", err.Error())
+									}
+
+									fmt.Println()
+									
+									fmt.Println("----------------------------------")
+									for i := 0; i < len(trxData); i++ {
+										fmt.Println("Trx ID : ", trxData[i].ID)
+										fmt.Println("----------------------------------")
+										fmt.Println("Cashier  : ", trxData[i].StaffName)
+										fmt.Println("Customer : ", trxData[i].CustomerName)
+										fmt.Println("Date  	 : ", trxData[i].CreatedDate)
+										fmt.Println("----------------------------------")
+									}
+									for i := 0; i < len(items); i++ {
+										fmt.Println("Product ID     : ", items[i].IDProduct)
+										fmt.Println("Product Name   : ", items[i].ProductName)
+										fmt.Println("QTY            : ", items[i].Qty)
+										fmt.Println("----------------------------------")
+									}
+
+									fmt.Println()
+
+								} else if trxMenu == 9 {
 									showTrx = false
 								}
 							}
