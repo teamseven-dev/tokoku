@@ -11,9 +11,10 @@ type CustMenu struct {
 }
 
 type Customer struct {
-	ID      int
-	Name    string
-	IDStaff int
+	ID        int
+	Name      string
+	IDStaff   int
+	StaffName string
 }
 
 func (cm *CustMenu) AddCustomer(nama string, StaffID int) (bool, error) {
@@ -64,7 +65,7 @@ func (cm *CustMenu) RemoveCustomer(nama string) (bool, error) {
 }
 
 func (cm *CustMenu) ShowCustomer() ([]Customer, error) {
-	res, err := cm.DB.Query("SELECT FROM customers")
+	res, err := cm.DB.Query("SELECT c.id_customer, c.name, s.name FROM customers c, staffs s WHERE c.id_staff = s.id_staff")
 	if err != nil {
 		log.Println("error query", err.Error())
 		return []Customer{}, errors.New("error select database")
@@ -74,7 +75,7 @@ func (cm *CustMenu) ShowCustomer() ([]Customer, error) {
 
 	for res.Next() {
 		customer := Customer{} // creating new struct for every row
-		err = res.Scan(&customer.ID, &customer.Name, &customer.IDStaff)
+		err = res.Scan(&customer.ID, &customer.Name, &customer.StaffName)
 		if err != nil {
 			log.Println("------------------")
 			log.Println(err)
