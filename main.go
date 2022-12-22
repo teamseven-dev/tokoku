@@ -307,12 +307,12 @@ func main() {
 							if err != nil {
 								fmt.Println("------------------")
 								fmt.Println(err.Error())
-							} else {
+							} 
+							if prodRes {
 								fmt.Println("------------------")
 								fmt.Println("Inserted a new product successfully!")
 								fmt.Println("=======================")
 							}
-							inputProduct.ID = prodRes
 
 						case 4:
 

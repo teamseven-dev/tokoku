@@ -34,25 +34,25 @@ func (pm *ProductMenu) Duplicate(productName string) bool {
 	return true
 }
 
-func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
+func (pm *ProductMenu) Insert(newProduct Product) (bool, error) {
 	insertQry, err := pm.DB.Prepare("INSERT INTO products (product_name, qty, id_staff, created_date, updated_date) VALUES (?,?,?,now(),now())")
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Prepare insert newProduct : ", err.Error())
-		return 0, errors.New("Prepare statement insert new product error.")
+		return false, errors.New("Prepare statement insert new product error.")
 	}
 
 	if pm.Duplicate(newProduct.Name) {
 		fmt.Println("------------------")
 		log.Println("duplicated information")
-		return 0, errors.New("product name already exist")
+		return false, errors.New("product name already exist")
 	}
 
 	res, err := insertQry.Exec(newProduct.Name, newProduct.Qty, newProduct.IDStaff)
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Insert new product : ", err.Error())
-		return 0, errors.New("Insert new product error.")
+		return false, errors.New("Insert new product error.")
 	}
 
 	affRows, err := res.RowsAffected()
@@ -60,18 +60,16 @@ func (pm *ProductMenu) Insert(newProduct Product) (int, error) {
 	if err != nil {
 		fmt.Println("------------------")
 		log.Println("Afer inser new product : ", err.Error())
-		return 0, errors.New("Error after insert new product.")
+		return false, errors.New("Error after insert new product.")
 	}
 
 	if affRows <= 0 {
 		fmt.Println("------------------")
 		log.Println("No rows affected.")
-		return 0, errors.New("No record affected.")
+		return false, errors.New("No record affected.")
 	}
 
-	id, _ := res.LastInsertId()
-
-	return int(id), nil
+	return true, nil
 }
 
 func (pm *ProductMenu) Delete(id int) (bool, error) {
