@@ -7,9 +7,9 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 
 - [Features of the App](#features-of-the-app)
 - [Future Improvements](#future-improvements)
-- [Requirements](#Requirements)
 - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
 - [Folder Structure Pattern](#folder-structure-pattern)
+- [Requirements](#Requirements)
 - [How to Install](#how-to-install)
 - [Credit](#credit)
 
@@ -43,10 +43,6 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 - [x] A better deleting system
 - [x] Product & transaction price
 
-## Requirements
-- Go v1.19
-- MySQL v8.x
-
 
 ## Entity Relationship Diagram (ERD)
 ![run](./ERD-Design.png)
@@ -75,6 +71,9 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 └── tokoku-script.sql
 ```
 
+## Requirements
+- Go v1.19
+- MySQL v8.x
 
 ## How to Install
 
