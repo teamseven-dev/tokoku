@@ -6,6 +6,7 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 ## Table Of Content
 
 - [Features of the App](#features-of-the-app)
+- [Simple Demo](#simple-demo)
 - [Future Improvements](#future-improvements)
 - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
 - [Folder Structure Pattern](#folder-structure-pattern)
@@ -37,13 +38,14 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
       :white_check_mark: Show and delete a product\
       :white_check_mark: Show history transaction and delete transaction\
       :white_check_mark: Show and delete a customer
-      
+
+## Simple Demo
+![run](./demo-tokoku.gif)
 
 ## Future Improvements
 
 - [x] A better deleting system
 - [x] Product & transaction price
-
 
 ## Entity Relationship Diagram (ERD)
 ![run](./ERD-Design.png)
