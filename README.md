@@ -37,6 +37,10 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
       :white_check_mark: Show and delete a staff\
       :white_check_mark: Update staff account information
 
+## Future Improvements
+
+[X] A better deleting system
+[X] Product & transaction price
 
 ## Requirements
 - Go v1.19
