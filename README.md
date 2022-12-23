@@ -73,8 +73,6 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 
 ## How to Install
 
-- Create a new database and execute `sql-script.sql` on it
-
 - Clone it
 
 ```
@@ -106,6 +104,7 @@ $ go get github.com/joho/godotenv
 $ go get github.com/go-sql-driver/mysql
 ```
 
+- Create a new database and execute `sql-script.sql` on it
 
 - Rename `local.env.example` to `local.env` and adjust the content of it as your environment settings
 
