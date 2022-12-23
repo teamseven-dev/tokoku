@@ -87,7 +87,7 @@ $ cd tokoku
 $ rm -rf .git
 ```
 
-- Delete .git
+- Install packages
 
 ```
 $ go get github.com/joho/godotenv
