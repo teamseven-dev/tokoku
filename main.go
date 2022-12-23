@@ -83,138 +83,153 @@ func main() {
 						case 1:
 
 							// NEW TRANSACTION
-							fmt.Println()
-							fmt.Println("ADD NEW TRANSACTION")
-							fmt.Println("===================")
-							datacustomer, _ := custMenu.ShowCustomer()
-							for i := 0; i < len(datacustomer); i++ {
-								fmt.Println("Customer ID	:", datacustomer[i].ID)
-								fmt.Println("Customer Name	:", datacustomer[i].Name)
-								fmt.Println("Inserted by 	:", datacustomer[i].StaffName)
-								fmt.Println("--------------------------")
-							}
-
-							var customerID int
-							fmt.Print("Insert Customer ID : ")
-							fmt.Scanln(&customerID)
-							fmt.Println("=======================")
-							trxID, err := transactionMenu.AddTransaction(res.ID, customerID)
-							if err != nil {
-								fmt.Println(err.Error())
-							}
-							if trxID < 0 {
-								fmt.Println("------------------")
-								fmt.Println("Error, please insert a correct customer ID")
+							newTrx := true
+							for newTrx {
+								fmt.Println()
+								fmt.Println("ADD NEW TRANSACTION")
+								fmt.Println("===================")
+								datacustomer, _ := custMenu.ShowCustomer()
+								for i := 0; i < len(datacustomer); i++ {
+									fmt.Println("Customer ID	:", datacustomer[i].ID)
+									fmt.Println("Customer Name	:", datacustomer[i].Name)
+									fmt.Println("Inserted by 	:", datacustomer[i].StaffName)
+									fmt.Println("--------------------------")
+								}
+	
+								var customerID int
+								fmt.Print("Insert Customer ID : ")
+								fmt.Scanln(&customerID)
 								fmt.Println("=======================")
-							}
-
-							fmt.Println()
-
-							var insertMore = true
-							var trxMenu int
-							for insertMore {
-								fmt.Println("LIST OF PRODUCTS")
-								fmt.Println("------------------")
-								products, _ := productMenu.Show()
-								if len(products) == 0 {
-									fmt.Println("No product available.")
-								} else {
-									for i := 0; i < len(products); i++ {
-										if products[i].Qty == 0 {
-											continue
-										}
-										fmt.Println("Product ID     : ", products[i].ID)
-										fmt.Println("Product Name   : ", products[i].Name)
-										fmt.Println("QTY            : ", products[i].Qty)
-										fmt.Println("Staff Name     : ", products[i].StaffName)
-										fmt.Println("--------------------------")
-									}
-								}
-								var productID, inputQty int
-								fmt.Println("Add a product to the cart")
-								fmt.Println("------------------")
-								fmt.Print("Insert Product ID : ")
-								fmt.Scanln(&productID)
-								fmt.Print("Insert amount : ")
-								fmt.Scanln(&inputQty)
-								fmt.Println("------------------")
-								cureentQty, _ := productMenu.GetQty(productID)
-								if inputQty > cureentQty {
-									fmt.Println("----------------------")
-									fmt.Printf("Unable to insert %d, only %d stock remaining\n", inputQty, cureentQty)
-									fmt.Println("----------------------")
-									continue
-								}
-								insertProduct, err := transactionMenu.InsertItem(trxID, productID, inputQty)
-								uptStock, _ := productMenu.UpdateStock(inputQty, productID)
-								if !uptStock {
-									fmt.Println("Error updating stock")
-									fmt.Println("----------------------")
-								}
-
+								trxID, err := transactionMenu.AddTransaction(res.ID, customerID)
 								if err != nil {
 									fmt.Println(err.Error())
 								}
-
-								if insertProduct {
-									fmt.Println("Added an item to the cart successfully!")
-									fmt.Println("----------------------")
-								} else {
-									fmt.Println("Unable to Input Transaction, please insert an item correctly")
-									fmt.Println("----------------------")
+								if trxID < 0 {
+									fmt.Println("------------------")
+									fmt.Println("Error, please insert a correct customer ID")
+									fmt.Println("=======================")
 								}
-
+	
 								fmt.Println()
-
-								fmt.Println("CART")
-								fmt.Println("----------------------")
-								items, _ := transactionMenu.ShowItems(trxID)
-								for i := 0; i < len(items); i++ {
-									fmt.Println("Product ID     : ", items[i].IDProduct)
-									fmt.Println("Product Name   : ", items[i].ProductName)
-									fmt.Println("QTY            : ", items[i].Qty)
-									fmt.Println("--------------------------")
-								}
-
-								fmt.Println()
-
-								fmt.Println("1. Insert more item")
-								fmt.Println("2. Checkout the cart")
-								fmt.Println("----------------------")
-								fmt.Print("Choose a menu [1, 2] : ")
-								fmt.Scanln(&trxMenu)
-								fmt.Println("----------------------")
-								fmt.Println()
-								if trxMenu == 2 {
-									insertMore = false
-
-									trxData, err := transactionMenu.ShowTransaction(trxID)
+	
+								var insertMore = true
+								var trxMenu int
+								for insertMore {
+									fmt.Println("LIST OF PRODUCTS")
+									fmt.Println("------------------")
+									products, _ := productMenu.Show()
+									if len(products) == 0 {
+										fmt.Println("No product available.")
+									} else {
+										for i := 0; i < len(products); i++ {
+											if products[i].Qty == 0 {
+												continue
+											}
+											fmt.Println("Product ID     : ", products[i].ID)
+											fmt.Println("Product Name   : ", products[i].Name)
+											fmt.Println("QTY            : ", products[i].Qty)
+											fmt.Println("Staff Name     : ", products[i].StaffName)
+											fmt.Println("--------------------------")
+										}
+									}
+									var productID, inputQty int
+									fmt.Println("Add a product to the cart")
+									fmt.Println("------------------")
+									fmt.Print("Insert Product ID : ")
+									fmt.Scanln(&productID)
+									fmt.Print("Insert amount : ")
+									fmt.Scanln(&inputQty)
+									fmt.Println("------------------")
+									cureentQty, _ := productMenu.GetQty(productID)
+									if inputQty > cureentQty {
+										fmt.Println("----------------------")
+										fmt.Printf("Unable to insert %d, only %d stock remaining\n", inputQty, cureentQty)
+										fmt.Println("----------------------")
+										continue
+									}
+									insertProduct, err := transactionMenu.InsertItem(trxID, productID, inputQty)
+									uptStock, _ := productMenu.UpdateStock(inputQty, productID)
+									if !uptStock {
+										fmt.Println("Error updating stock")
+										fmt.Println("----------------------")
+									}
+	
 									if err != nil {
-										fmt.Println("Unable to show transaction :", err.Error())
+										fmt.Println(err.Error())
 									}
-
-									fmt.Println("==================================")
-									fmt.Println("             RECEIPT")
-									fmt.Println("----------------------------------")
-
-									for i := 0; i < len(trxData); i++ {
-										fmt.Println("Receipt ID : ", trxData[i].ID)
-										fmt.Println("----------------------------------")
-										fmt.Println("Cashier  : ", trxData[i].StaffName)
-										fmt.Println("Customer : ", trxData[i].CustomerName)
-										fmt.Println("Date  	 : ", trxData[i].CreatedDate)
-										fmt.Println("----------------------------------")
+	
+									if insertProduct {
+										fmt.Println("Added an item to the cart successfully!")
+										fmt.Println("----------------------")
+									} else {
+										fmt.Println("Unable to Input Transaction, please insert an item correctly")
+										fmt.Println("----------------------")
 									}
+	
+									fmt.Println()
+	
+									fmt.Println("CART")
+									fmt.Println("----------------------")
+									items, _ := transactionMenu.ShowItems(trxID)
 									for i := 0; i < len(items); i++ {
 										fmt.Println("Product ID     : ", items[i].IDProduct)
 										fmt.Println("Product Name   : ", items[i].ProductName)
 										fmt.Println("QTY            : ", items[i].Qty)
-										fmt.Println("----------------------------------")
+										fmt.Println("--------------------------")
 									}
+	
+									fmt.Println()
+	
+									fmt.Println("1. Insert more item")
+									fmt.Println("2. Checkout the cart")
+									fmt.Println("----------------------")
+									fmt.Print("Choose a menu [1, 2] : ")
+									fmt.Scanln(&trxMenu)
+									fmt.Println("----------------------")
+									fmt.Println()
+									if trxMenu == 2 {
+										insertMore = false
+	
+										trxData, err := transactionMenu.ShowTransaction(trxID)
+										if err != nil {
+											fmt.Println("Unable to show transaction :", err.Error())
+										}
+	
+										fmt.Println("==================================")
+										fmt.Println("             RECEIPT")
+										fmt.Println("----------------------------------")
+	
+										for i := 0; i < len(trxData); i++ {
+											fmt.Println("Receipt ID : ", trxData[i].ID)
+											fmt.Println("----------------------------------")
+											fmt.Println("Cashier  : ", trxData[i].StaffName)
+											fmt.Println("Customer : ", trxData[i].CustomerName)
+											fmt.Println("Date  	 : ", trxData[i].CreatedDate)
+											fmt.Println("----------------------------------")
+										}
+										for i := 0; i < len(items); i++ {
+											fmt.Println("Product ID     : ", items[i].IDProduct)
+											fmt.Println("Product Name   : ", items[i].ProductName)
+											fmt.Println("QTY            : ", items[i].Qty)
+											fmt.Println("----------------------------------")
+										}
+	
+										fmt.Println("Thank You for shopping in TOKOKU!")
+										fmt.Println("        Have a nice day ^^")
+										fmt.Println("==================================")
+									}
+								}
 
-									fmt.Println("Thank You for shopping in TOKOKU!")
-									fmt.Println("        Have a nice day ^^")
-									fmt.Println("==================================")
+								var isNewTrx int
+								fmt.Println()
+								fmt.Println("1. Insert more transaction")
+								fmt.Println("9. Back to main menu")
+								fmt.Println("------------------")
+								fmt.Print("Please choose a menu [1, 9] : ")
+								fmt.Scanln(&isNewTrx)
+
+								if isNewTrx == 9 {
+									newTrx = false
 								}
 							}
 
