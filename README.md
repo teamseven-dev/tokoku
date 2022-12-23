@@ -8,7 +8,7 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 - [Requirements](#Requirements)
 - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
 - [Folder Structure Pattern](#folder-structure-pattern)
-- [How to Run](#how-to-run)
+- [How to Install](#how-to-install)
 - [Credit](#credit)
 
 ## Features of the App
@@ -65,7 +65,9 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 └── tokoku-script.sql
 ```
 
-## How to Run
+## How to Install
+
+- Create a new database and execute `sql-script.sql` on it
 
 - Clone it
 
@@ -78,6 +80,24 @@ $ git clone [https://github.com/teamseven-dev/tokoku.git]
 ```
 $ cd tokoku
 ```
+
+- Delete .git
+
+```
+$ rm -rf .git
+```
+
+- Delete .git
+
+```
+$ go get github.com/joho/godotenv
+```
+
+```
+$ go get github.com/go-sql-driver/mysql
+```
+
+- Rename `local.env.example` to `local.env` and adjust the content of it as your environment settings
 
 - Run the project
 
