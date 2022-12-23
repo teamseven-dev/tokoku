@@ -1,6 +1,6 @@
 # Tokoku App
 
-Tokoku is a CLI based point-of-sale app built with Golang and MySQL.
+Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 
 ## Table Of Content
 
