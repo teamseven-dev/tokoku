@@ -78,7 +78,9 @@ Tokoku is a CLI based point-of-sales app built with Golang and MySQL.
 - Go v1.19
 - MySQL v8.x
 
-External packages : [Godotenv](https://github.com/joho/godotenv), [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql)
+External packages : 
+- [Godotenv](https://github.com/joho/godotenv)
+- [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql)
 
 ## How to Install
 
